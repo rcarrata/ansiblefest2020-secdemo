@@ -91,7 +91,7 @@ Go to Ansible Tower and execute the Job Template of **Lab3_config_win10_vm**:
 </p>
 ++++
 
-This will trigger an automation (based in [this playbooks]) that will connect to the Win10 and execute some tasks:
+This will trigger an automation (based in https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/config_win10_vm.yml[this playbooks]) that will connect to the Win10 and execute some tasks:
 
 ++++
 <p align="center">
