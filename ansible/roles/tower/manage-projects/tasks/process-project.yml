@@ -1,0 +1,30 @@
+---
+
+- name: "Get the org id based on the org name"
+  set_fact:
+    org_id: "{{ item.id }}"
+  when:
+  - item.name|trim == project.organization|trim
+  with_items:
+  - "{{ existing_organizations_output.rest_output }}"
+
+- name: "Load up the project"
+  uri:
+    url: "{{ ansible_tower.url | default(default_ansible_tower_url) }}/api/v2/projects/"
+    user: "{{ ansible_tower.admin_username | default(default_ansible_tower_admin_username) }}"
+    password: "{{ ansible_tower.admin_password }}"
+    force_basic_auth: yes
+    method: POST
+    body: "{{ lookup('template', 'project.j2') }}"
+    body_format: 'json'
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    validate_certs: no
+    status_code: 200,201,400
+  register: project_output
+
+- name: "Clear/Update facts"
+  set_fact:
+    org_id: ''
+    processed_projects: "{{ processed_projects + [ { 'name': project.name } ] }}"

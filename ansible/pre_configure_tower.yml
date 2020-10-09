@@ -1,0 +1,34 @@
+---
+
+- hosts: ansible-tower
+  vars_files:
+    - vars/vars-tower.yml
+    - vault/vault.yml
+  roles:
+  - role: tower/config-ansible-tower
+  - role: tower/config-ansible-tower-license
+  tags:
+  - 'never'
+  - 'install'
+
+- hosts: ansible-tower
+  become: yes
+  vars_files:
+    - vars/vars-tower.yml
+    - vault/vault.yml
+  roles:
+  - role: tower/config-ansible-tower-package
+  tags:
+  - 'install'
+
+- hosts: ansible-tower
+  vars_files:
+    - vars/vars-tower.yml
+    - vault/vault.yml
+  roles:
+  - role: tower/manage-credentials
+  - role: tower/manage-inventories
+  - role: tower/manage-projects
+  - role: tower/manage-job-templates
+  tags:
+  - 'always'

@@ -1,0 +1,45 @@
+---
+
+- name: Create main resource group
+  azure_rm_resourcegroup:
+    name: "{{ main_resgroup }}"
+    location: "{{ location }}"
+
+- name: Create main virtual network
+  azure_rm_virtualnetwork:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ main_vnet_name }}"
+    address_prefixes: "{{ vnet_ip }}"
+
+- name: Add subnet internal
+  azure_rm_subnet:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ internal_subnet_name }}"
+    address_prefix: "{{ internal_subnet_ip }}"
+    virtual_network: "{{ main_vnet_name }}"
+
+- name: Add subnet internal DMZ
+  azure_rm_subnet:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ internal_subnet_dmz_name }}"
+    address_prefix: "{{ internal_subnet_dmz_ip }}"
+    virtual_network: "{{ main_vnet_name }}"
+
+- name: Add subnet external
+  azure_rm_subnet:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ external_subnet_name }}"
+    address_prefix: "{{ external_subnet_ip }}"
+    virtual_network: "{{ main_vnet_name }}"
+
+#- name: Add Azure BlobStorage Account
+#  azure_rm_storageaccount:
+#    resource_group: "{{ main_resgroup }}"
+#    name: "{{ storage_account_name }}"
+#    kind: BlobStorage
+#    type: Standard_LRS
+#    access_tier: Hot
+#    tags:
+#      name: ansiblefest
+#      delete: on-exit
+

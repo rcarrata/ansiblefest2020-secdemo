@@ -1,0 +1,59 @@
+= Automate Cybersecurity solutions in a cloud native scenario Lab
+
+Repository for the AnsibleFest 2020 lab - Automate Cybersecurity solutions in a cloud native scenario
+
+++++
+<p align="center">
+  <img src="documentation/images/init.png">
+</p>
+++++
+
+== [.underline]#Presenters/Lab Developers#:
+
+*Roberto Carratalá*, Cloud & DevOps Architect, Red Hat^(R)^
+
+*Diego Escobar*, Cibersecurity Specialist Architect, Check Point^(R)^
+
+== Lab Overview
+
+In this hands-on lab, we will cover the comprehensive Cibersecurity capabilities available in Red Hat Ansible Tower and Checkpoint Threat Prevention Systems. You will gain experience with:
+
+* Hands on with Ansible Tower and how to integrate them through cloud native environments as Microsoft Azure
+
+* Define as a code all the objects of Ansible Tower (Job Templates, Inventories, Workflows, Nodes, etc)
+
+* Automatic deployment of a fully functional Checkpoint environment with Security Management Server and Gateway
+
+* Automatic installation and configuration of a Windows Server (including installation of Packages and Updates)
+
+* Deployment fully automated of Kubernetes cluster and deployment of an Application of example (Etherpad)
+
+* Deployment fully automated of a Jboss server and deployment of an Application of example (Ticket Monster)
+
+* Deployment and configuration of Checkpoint Rules & Policies for hardening and securing your apps.
+
+* Establish NAT rules and expose your applications through a Checkpoint Gateway, logging and monitoring all the actions through your Apps
+
+* How to work with Infrastructure as Code. EVERYTHING is code. Everything. No manual actions will be performed in this lab :)
+
+== Lab Environment
+
+The entire lab environment is hosted online and includes Red Hat Ansible Tower^(R)^, Red Hat Enterprise Linux^(R)^, Checkpoint^(R)^ Security Management Virtual Appliances, Checkpoint^(R)^ Security Gateway, Microsoft^(R)^ Windows, Microsoft Azure^(R)^, Red Hat^(R)^ JBoss Web Server and Kubernetes^(R)^.
+
+The lab could be pre-hosted, or you can deploy your own flavor for your own tests (check documentation/prelab.doc[prelab.doc] in the documentation).
+
+== Table of Contents
+
+* link:documentation/lab0.adoc[Lab 0: Lab Overview & Prerequisites]
+* link:documentation/lab1.adoc[Lab 1: Integrating Ansible Tower with DevOps and Cloud Tools]
+* link:documentation/lab2.adoc[Lab 2: Deploying the DevSecOps environment in Azure with Ansible Tower]
+* link:documentation/lab3.adoc[Lab 3: Checkpoint Cybersecurity environment automatic configuration]
+* link:documentation/lab4.adoc[Lab 4: Automatic systems securization through Policies and Checkpoint Management Objects]
+* link:documentation/lab5.adoc[Lab 5: Application Hardening with Checkpoint Firewall and NAT Rules fully automated]
+* link:documentation/prelab.adoc[Lab Opt: Preprovision Infrastructure for self deploy the lab]
+* link:documentation/tshoot.adoc[Lab Tshoot: Troubleshooting and resolution of common issues]
+
+
+== Special Thanks
+
+Special thanks to Germán Montalvo and Cesar Martinez among others, for their support and help during the creation and testing of this lab.

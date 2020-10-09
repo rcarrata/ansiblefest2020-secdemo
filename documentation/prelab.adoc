@@ -1,0 +1,28 @@
+## Deployment of the prerequisites & the environment for the Lab
+
+* Automatic deployment
+
+```
+ansible-playbook pre_full_deploy_tower.yml    --vault-password-file .vault-password-file -e "lab_name=lab2"
+```
+
+* Manual Deployment
+
+
+Deploy infra networking azure
+
+```
+ansible-playbook pre_deploy_azure_infra.yml  --vault-password-file .vault-password-file -e "lab_name=lab2"
+```
+
+Deploy Tower VM Azure
+
+```
+ansible-playbook pre_deploy_tower_vm.yml  --vault-password-file .vault-password-file -e "lab_name=lab2"
+```
+
+Deploy preconfiguration tower
+
+```
+ansible-playbook pre_configure_tower.yml -i inventory/hosts  --vault-password-file .vault-password-file -e "lab_name=lab2" --tag="install"
+```

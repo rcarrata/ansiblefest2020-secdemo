@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Deploy Route Table to Change Gateway for the Apps'
+      include_role:
+        name: "ckp/add-route-table"

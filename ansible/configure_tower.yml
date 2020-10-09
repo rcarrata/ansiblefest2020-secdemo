@@ -1,0 +1,24 @@
+---
+
+- hosts: ansible-tower
+  gather_facts: False
+  vars_files:
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+    - vars/common.yml
+  roles:
+  #- role: tower/manage-settings
+  - role: tower/manage-credentials
+  #- role: tower/manage-credential-types
+  - role: tower/manage-projects
+  - role: tower/manage-inventories
+  - role: tower/manage-job-templates
+
+- hosts: ansible-tower
+  gather_facts: False
+  vars_files:
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+    - vars/common.yml
+  roles:
+    - tower/workflow_job_templates

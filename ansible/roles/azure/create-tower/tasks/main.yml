@@ -1,0 +1,96 @@
+---
+# tasks file for create-tower
+
+- name: Create Network Security Group
+  azure_rm_securitygroup:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ tower_net_seg_group }}"
+    rules:
+      - name: 'allow_web_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: 'allow_ssh_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 22
+        access: Allow
+        priority: 1002
+        direction: Inbound
+      - name: 'allow_powershell_remoting'
+        protocol: Tcp
+        destination_port_range:
+          - 5985
+          - 5986
+        access: Allow
+        priority: 1003
+        direction: Inbound
+
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ main_resgroup }}"
+    allocation_method: Static
+    name: "{{ tower_public_ip }}"
+  register: output_ip_address
+
+- name: Output public IP
+  debug:
+    msg: "The public IP is {{ output_ip_address.state.ip_address }}"
+
+- name: Set fact Public IP
+  set_fact:
+    tower_pip: "{{ output_ip_address.state.ip_address }}"
+
+- name: Create a network interface with public and private IP
+  azure_rm_networkinterface:
+    name: "{{ tower_nic }}"
+    resource_group: "{{ main_resgroup  }}"
+    virtual_network: "{{ main_vnet_name }}"
+    subnet_name: "{{ internal_subnet_name }}"
+    security_group: "{{ tower_net_seg_group }}"
+    ip_configurations:
+      - name: "{{ tower_private_nic }}"
+        public_ip_address_name: "{{ tower_public_ip }}"
+        primary: True
+        private_ip_address: "{{ tower_private_ip }}"
+        private_ip_allocation_method: Static
+
+- name: Create Tower VM
+  azure_rm_virtualmachine:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ tower_vm_name }}"
+    vm_size: "{{ tower_vm_size }}"
+    admin_username: "{{ tower_user }}"
+    admin_password: "{{ password }}"
+    network_interfaces: "{{ tower_nic }}"
+    image:
+      offer: "{{ tower_offer }}"
+      publisher: "{{ tower_publisher }}"
+      sku: "{{ tower_sku }}"
+      version: "{{ tower_version }}"
+
+- name: "Wait for SSH to come up"
+  wait_for:
+    host: "{{ tower_pip }}"
+    port: 22
+    delay: 5
+    timeout: 320
+    state: started
+
+- name: "Register the specs of the new brand VM"
+  set_stats:
+    data:
+      new_vm_ip: "{{ tower_pip }}"
+    per_host: no
+    aggregate: no
+
+- name: "Add tower-instance to the inv"
+  add_host:
+    name: "{{ tower_pip }}"
+    groups: "ansible-tower"
+    ansible_ssh_host: "{{ tower_pip }}"
+    ansible_host: "{{ tower_pip }}"

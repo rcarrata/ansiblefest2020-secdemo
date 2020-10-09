@@ -1,0 +1,23 @@
+= Lab0 - Lab Overview & Prerequisites
+
+== 1 - Overview
+
+Sometime the things failed. The world is not perfect right? Could be due to connection, latency, slow request, github down (oh no!), or any resource that could not be requested at time. 
+
+So if you are experience this, first of all SORRY! We design this lab to be as much as perfect that we could, but there is tons of moving pieces in this lab so it's quite inevitable to something happend.
+
+But here is a guide to try to solve the situation.
+
+=== 1 - Try to repeat the Job Template that failed
+
+Ansible Tower allows you to try to repeat the job template that failed with the same parameters and vars:
+
+++++
+<p align="center">
+  <img width="500" height="500" src="../documentation/images/lab7_1.png">
+</p>
+++++
+
+Click in the Rocket icon beside the Failed Status, and click to All to relaunch all of the tasks (not press Failed).
+
+link:../README.adoc[Previous Section -> Table Content]

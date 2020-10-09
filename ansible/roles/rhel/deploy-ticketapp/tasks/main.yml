@@ -1,0 +1,22 @@
+---
+
+- name: "Copy application WAR file to host"
+  copy:
+    src: ticket-monster.war
+    dest: /tmp
+
+- name: "Unzip WAR file"
+  unarchive:
+    src: "/tmp/ticket-monster.war"
+    dest: "/usr/share/tomcat/webapps/ROOT/"
+    copy: no
+    mode: 0755
+    owner: tomcat
+    group: tomcat
+  notify: restart tomcat
+
+- name: "Not use firewalld"
+  service:
+    name: firewalld
+    state: stopped
+    enabled: False

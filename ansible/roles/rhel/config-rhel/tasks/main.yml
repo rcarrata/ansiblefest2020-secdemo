@@ -1,0 +1,15 @@
+---
+
+- name: ensure NetworkManager is configured to use keyfile plugin
+  copy: src=NetworkManager.conf dest=/etc/NetworkManager/NetworkManager.conf mode=0600
+  notify:
+   - restart NetworkManager
+   - wait for new network settings
+
+- name: ensure NetworkManager settings are initialized from appropriate keyfile configuration
+  copy: src={{ myorg_network_profile }}.conf dest=/etc/NetworkManager/system-connections/ansible_generated.conf mode=0600
+  notify:
+    - restart NetworkManager
+    - reload network interface
+    - wait for new network settings
+

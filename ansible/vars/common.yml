@@ -1,0 +1,535 @@
+---
+
+##### SubcriptionData
+#subscription_id: encrypted in vault.yml
+#secret: encrypted in vault.yml
+#client_id: encrypted in vault.yml
+#tenant: encrypted in vault.yml
+
+##### Azure Net Infra
+#main_resgroup: check vars/labx.yml
+#main_vnet_name: check vars/labx.yml
+#vnet_ip: "check vars/labx.yml
+internal_subnet_name: "ansiblefest_{{ lab_name }}_internal_subnet"
+#internal_subnet_ip: "check vars/labx.yml
+external_subnet_name: "ansiblefest_{{ lab_name }}_external_subnet"
+#external_subnet_ip: "check vars/labx.yml
+internal_subnet_dmz_name: "ansiblefest_{{ lab_name }}_internal_subnet_dmz"
+#internal_subnet_dmz_ip: "check vars/labx.yml
+#internal_subnet_ip_first: "check vars/labx.yml"
+#internal_subnet_dmz_net: "check vars/labx.yml"
+storage_account_name: "ansiblefest2020blob"
+storage_container: "ansiblefest2020"
+route_table: "ansiblefest_{{ lab_name }}_route_table"
+route_table_name: "ansiblefest_{{ lab_name }}_route_table_Internet"
+
+##### Azure CHKP SMS
+sms_resgroup: "ansiblefest_{{ lab_name }}_sms_rg"
+cloudGuardVersionsms: "R80.30 - Bring Your Own License"
+#adminPasswordsms: stored in vault
+authenticationTypesms: "password"
+vmNamesms: "chkpsmsansiblefest{{ lab_name }}"
+vmSizesms: "Standard_D3_v2"
+virtualNetworkNamesms: "{{ main_vnet_name }}"
+Subnet1Namesms: "{{ internal_subnet_name }}"
+Subnet1Prefixsms: "{{ internal_subnet_ip }}"
+#Subnet1StartAddresssms: "check vars/labx.yml"
+vnetNewOrExistingsms: "existing"
+virtualNetworkExistingRGNamesms: "{{ main_resgroup }}"
+managementGUIClientNetworksms: "0.0.0.0/0"
+installationTypesms: "management"
+allowDownloadFromUploadToCheckPointsms: 'true'
+additionalDiskSizeGBsms: "0"
+diskTypesms: "Standard_LRS"
+sourceImageVhdUrisms: "noCustomUri"
+template_linksms: "https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/marketplace-management/mainTemplate.json"
+
+ckp_resources_blob: "https://{{ storage_account_name }}.blob.core.windows.net/{{ storage_container }}"
+ckp_deployagent_blob: "{{ ckp_resources_blob }}/{{ deployagent_pkg }}"
+deployagent_pkg: "DeploymentAgent_000001959_1.tgz"
+
+#https://ansiblefest2020blob.blob.core.windows.net/ansiblefest2020/DeploymentAgent_000001959_1.tgz
+
+ckp_jumbohotfix_blob: "{{ ckp_resources_blob }}/{{ jumbohotfix_pkg }}"
+jumbohotfix_pkg: "Check_Point_R80_30_JUMBO_HF_Bundle_T217_sk153152_Security_Management_3_10_FULL.tgz"
+
+##### Azure CHKP GW
+gw_resgroup: "ansiblefest_{{ lab_name }}_gw_rg"
+cloudGuardVersiongw: "R80.30 - Bring Your Own License"
+#adminPasswordgw: stored in vault
+authenticationTypegw: "password"
+vmNamegw: "chkpgwansiblefest{{ lab_name }}"
+vmSizegw: "Standard_D3_v2"
+#sicKeyGW: stored in vault
+virtualNetworkNamegw: "{{ main_vnet_name }}"
+Subnet1Namegw: "{{ external_subnet_name }}"
+Subnet1Prefixgw: "{{ external_subnet_ip }}"
+#Subnet1StartAddressgw: "check vars/labx.yml"
+Subnet2Namegw: "{{ internal_subnet_name }}"
+Subnet2Prefixgw: "{{ internal_subnet_ip }}"
+#Subnet2StartAddressgw: "check vars/labx.yml"
+vnetNewOrExistinggw: "existing"
+virtualNetworkExistingRGNamegw: "{{ main_resgroup }}"
+allowDownloadFromUploadToCheckPointgw: 'true'
+additionalDiskSizeGBgw: "0"
+diskTypegw: "Standard_LRS"
+sourceImageVhdUrigw: "noCustomUri"
+template_linkgw: "https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/marketplace-single/mainTemplate.json"
+
+##### Azure VM Win10
+win10_net_seg_group: "nsg1_{{ lab_name }}"
+win10_public_ip: "win10_ip_{{ lab_name }}"
+win10_nic: "win10_nic_{{ lab_name }}"
+win10_private_nic: "win10_private_nic_{{ lab_name }}"
+#win10_private_ip: "check vars/labx.yml"
+
+win10_vm_size: "Standard_DS2_v2"
+win10_vm_name: "w10{{ lab_name }}"
+win10_username: azureuser
+
+win10_offer: "Windows-10"
+win10_publisher: "MicrosoftWindowsDesktop"
+win10_sku: "rs5-pro"
+win10_version: "latest"
+
+win10_blob: "https://{{ storage_account_name }}.blob.core.windows.net/{{ storage_container }}/{{ win10_ckp_smartconsole }}"
+win10_ckp_smartconsole: SmartConsole.exe
+
+##### Azure VM Tower
+tower_public_ip: "tower_ip_{{ lab_name }}"
+tower_net_seg_group: "tower_nsg1_{{ lab_name }}"
+tower_nic: "tower_nic_{{ lab_name }}"
+tower_private_nic: "tower_private_nic_{{ lab_name }}"
+#tower_private_ip: "check vars/labx.yml"
+
+tower_vm_size: "Standard_DS2_v2"
+tower_vm_name: "tower{{ lab_name }}"
+tower_user: azureuser
+
+tower_offer: "RHEL"
+tower_publisher: "RedHat"
+tower_sku: "7-LVM"
+tower_version: "latest"
+
+##### RHEL1
+rhel_net_seg_group: "rhel_nsg_{{ lab_name }}"
+rhel_vm_size: "Standard_DS1_v2"
+rhel_username: azureuser
+
+rhel_offer: "RHEL"
+rhel_publisher: "RedHat"
+rhel_sku: "7-LVM"
+rhel_version: "latest"
+
+##### Ansible Tower Configuration
+ansible_tower:
+  #url: "https://{{ hostvars[groups['ansible-tower'] | first ].ansible_host }}"
+  url: "https://localhost"
+  admin_username: "admin"
+  admin_password: "{{ admin_vault_password }}"
+  validate_certs: false
+  install:
+    license_file: "{{ inventory_dir }}/../files/license.json"
+    pg:
+      username: 'tower'
+      password: "{{ pg_vault_password }}"
+    rabbitmq:
+      port: 5672
+      use_long_name: false
+      password: "{{ rabbitmq_vault_password  }}"
+  credentials:
+  - name: "Vault"
+    description: "Vault"
+    organization: "Default"
+    credential_type: "Vault"
+    inputs:
+      vault_password: "{{ vault_password }}"
+  - name: "azure_creds"
+    description: "azure_creds"
+    organization: "Default"
+    credential_type: "Microsoft Azure Resource Manager"
+    inputs:
+      client: "{{ client_id }}"
+      secret: "{{ secret }}"
+      tenant: "{{ tenant }}"
+      subscription: "{{ subscription_id }}"
+  - name: "Source Control"
+    description: "Source Control"
+    organization: "Default"
+    credential_type: "Source Control"
+    inputs:
+      username: "{{ github_username }}"
+      ssh_key_data: "{{ ssh_key_data }}"
+  - name: "VMKey"
+    description: "VMKey Machine"
+    organization: "Default"
+    credential_type: "Machine"
+    inputs:
+      username: "{{ tower_username }}"
+      password: "{{ password }}"
+      become_method: sudo
+  - name: "VMGW"
+    description: "VMGW Machine"
+    organization: "Default"
+    credential_type: "Machine"
+    inputs:
+      username: "admin"
+      password: "{{ password }}"
+  inventories:
+  - name: "ansible-tower"
+    organization: "Default"
+    hosts:
+    - name: "ansible-tower"
+      variables: "---\\nansible_host: localhost"
+  - name: w10
+    organization: Default
+    hosts:
+    - name: "w10"
+      variables: "---\\nansible_host: {{ win10_private_ip }}"
+  - name: rhel1
+    organization: Default
+    hosts:
+    - name: "rhel1"
+      variables: "---\\nansible_host: {{ rhel1_private_ip }}"
+  - name: rhel2
+    organization: Default
+    hosts:
+    - name: "rhel2"
+      variables: "---\\nansible_host: {{ rhel2_private_ip }}"
+  - name: ckp-sms
+    organization: Default
+    hosts:
+    - name: "ckp-sms"
+      variables: "---\\nansible_host: {{ Subnet1StartAddresssms }} \\nansible_user: admin"
+  - name: ckp-gw
+    organization: Default
+    hosts:
+    - name: "ckp-gw"
+      variables: "---\\nansible_host: {{ Subnet2StartAddressgw }} \\nansible_user: admin"
+  projects:
+  - name: "ansiblefest2020-project"
+    description: "Ansible Fest 2020 Repo"
+    scm_type: "git"
+    scm_url: "https://github.com/rcarrata/ansiblefest2020-secdemo.git"
+    scm_branch: "master"
+    organization: "Default"
+    #credential: "5"
+  job_templates:
+  - name: "Lab1_config_tower_objects"
+    description: "Lab1 Config Tower Objects for Cybersec lab"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/configure_tower.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "Vault"
+    - "VMKey"
+  - name: "Lab2_deploy_win10_vm"
+    description: "deploy_win10_vm"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/deploy_win10_vm.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "azure_creds"
+    - "Vault"
+  - name: "Lab2_deploy_ckp_gw"
+    description: "lab2_deploy_ckp_gw"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/deploy_ckp_gw.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "azure_creds"
+    - "Vault"
+  - name: "Lab2_deploy_ckp_sms"
+    description: "lab2_deploy_ckp_sms"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/deploy_ckp_sms.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "azure_creds"
+    - "Vault"
+  - name: "Lab2_deploy_rhel_vm"
+    description: "lab2_deploy_rhel_vm"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/deploy_rhel_vm.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "azure_creds"
+    - "VMKey"
+    - "Vault"
+  - name: "Lab3_config_win10_vm"
+    description: "Lab3_config_win10_vm"
+    inventory: "w10"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_win10_vm.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab3_config_ckp_jumbo_hotfix"
+    description: "lab3_config_ckp_jumbo_hotfix"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_jumbo_hotfix.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab3_config_ckp_setting_api_sms"
+    description: "lab4_config_ckp_setting_api_sms"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_setting_api_sms.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab3_config_add_simple_gw"
+    description: "Lab4_config_add_simple_gw"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_add_simple_gw.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab3_config_ckp_add_route_default_gw"
+    description: "Lab3_config_ckp_add_route_default_gw"
+    inventory: "ckp-gw"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_add_route_default_gw.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMGW"
+    - "Vault"
+  - name: "Lab4_config_ckp_sec_hosts"
+    description: "Lab4_config_ckp_sec_hosts"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_sec_hosts.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_config_ckp_sec_policies"
+    description: "Lab4_config_ckp_sec_policies"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_sec_policies.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_app_deploy_jboss_server"
+    description: "Lab5_app_deploy_jboss_server"
+    inventory: "rhel1"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/app_deploy_jboss.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_deploy_k8s"
+    description: "Lab5_deploy_k8s"
+    inventory: "rhel2"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/app_deploy_k8s.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_deploy_app_ticketmonster"
+    description: "Lab4_deploy_app_ticketmonster"
+    inventory: "rhel1"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/app_deploy_app_ticket.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_app_deploy_etherpad_k8s"
+    description: "Lab4_app_deploy_etherpad_k8s"
+    inventory: "rhel2"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/app_deploy_etherpad_k8s.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab4_config_azure_route_table_for_apps"
+    description: "Lab4_config_azure_route_table_for_apps"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_add_route_table.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+    - "azure_creds"
+  - name: "Lab5_deploy_nat_rules_for_apps"
+    description: "Lab5_deploy_nat_rules_for_apps"
+    inventory: "ckp-sms"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/config_ckp_nat_rules.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "VMKey"
+    - "Vault"
+  - name: "Lab99_re_deploy_ckp_sms"
+    description: "Lab99_re_deploy_ckp_sms"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/re_deploy_ckp_sms.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "azure_creds"
+    - "Vault"
+
+##### WORKFLOW TEMPLATES
+
+#tower_hostname: "https://{{ hostvars[groups['ansible-tower'] | first ].ansible_host }}"
+tower_hostname: "localhost"
+tower_username: "admin"
+tower_password: "{{ admin_vault_password }}"
+tower_validate_certs: False
+
+tower_workflows:
+  - name: Lab2_Workflow_deploy_azure_ciberinfra
+    description: Deploy Azure Cybersec Environment
+    survey_enabled: false
+    organization: Default
+    workflow_nodes:
+      - all_parents_must_converge: false
+        identifier: "node101"
+        unified_job_template: Lab2_deploy_win10_vm
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node102"
+        unified_job_template: Lab2_deploy_ckp_sms
+        credentials: []
+        success_nodes:
+          - node202
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node201"
+        unified_job_template: Lab2_deploy_rhel_vm
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node202"
+        unified_job_template: Lab2_deploy_ckp_gw
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+    survey_spec: {}
+  - name: Lab3_1_Workflow_config_sms_checkpoint_environment
+    description: Config Checkpoint Environment
+    survey_enabled: false
+    organization: Default
+    workflow_nodes:
+      - all_parents_must_converge: false
+        identifier: "node101"
+        unified_job_template: Lab3_config_ckp_jumbo_hotfix
+        credentials: []
+        success_nodes:
+          - node201
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node201"
+        unified_job_template: Lab3_config_ckp_setting_api_sms
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+    survey_spec: {}
+  - name: Lab3_2_Workflow_config_gw_to_checkpoint_environment
+    description: Config Checkpoint Environment
+    survey_enabled: false
+    organization: Default
+    workflow_nodes:
+      - all_parents_must_converge: false
+        identifier: "node101"
+        unified_job_template: Lab3_config_add_simple_gw
+        credentials: []
+        success_nodes:
+          - node201
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node201"
+        unified_job_template: Lab3_config_ckp_add_route_default_gw
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+    survey_spec: {}
+  - name: Lab4_1_Deploy_Applications_to_rhel_servers
+    description: Deploy Jboss and K8S apps to the rhel servers
+    survey_enabled: false
+    organization: Default
+    workflow_nodes:
+      - all_parents_must_converge: false
+        identifier: "node101"
+        unified_job_template: Lab4_app_deploy_jboss_server
+        credentials: []
+        success_nodes:
+          - node201
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node201"
+        unified_job_template: Lab4_deploy_app_ticketmonster
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node102"
+        unified_job_template: Lab4_deploy_k8s
+        credentials: []
+        success_nodes:
+          - node202
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node202"
+        unified_job_template: Lab4_app_deploy_etherpad_k8s
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+    survey_spec: {}
+  - name: Lab4_2_Workflow_deploy_security_policies
+    description: Deploy Security Policies
+    survey_enabled: false
+    organization: Default
+    workflow_nodes:
+      - all_parents_must_converge: false
+        identifier: "node101"
+        unified_job_template: Lab4_config_ckp_sec_hosts
+        credentials: []
+        success_nodes:
+          - node201
+        failure_nodes: []
+        always_nodes: []
+      - all_parents_must_converge: false
+        identifier: "node201"
+        unified_job_template: Lab4_config_ckp_sec_policies
+        credentials: []
+        success_nodes: []
+        failure_nodes: []
+        always_nodes: []
+    survey_spec: {}
+

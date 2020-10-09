@@ -1,0 +1,7 @@
+---
+
+- name: Add Checkpoint Lib CP API
+  command: "/var/lib/awx/venv/ansible/bin/pip install git+https://github.com/CheckPointSW/cp_mgmt_api_python_sdk"
+
+#- name: Add Checkpoint Lib Packaging
+#  command: "/var/lib/awx/venv/ansible/bin/pip install packaging"

@@ -1,0 +1,51 @@
+apiVersion: v1
+data:
+  settings.json: |
+    {
+      "skinName":"colibris",
+      "title":"Etherpad on Kubernetes"
+    }
+kind: ConfigMap
+metadata:
+  name: etherpad
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etherpad
+spec:
+  ports:
+  - name: web
+    port: 80
+    targetPort: web
+  selector:
+    app: etherpad
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etherpad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etherpad
+  template:
+    metadata:
+      labels:
+        app: etherpad
+    spec:
+      containers:
+      - image: etherpad/etherpad:1.7.5
+        name: etherpad
+        ports:
+        - containerPort: 9001
+          name: web
+        volumeMounts:
+        - mountPath: /opt/etherpad/settings.json
+          name: config
+          subPath: settings.json
+      volumes:
+      - configMap:
+          name: etherpad
+        name: config

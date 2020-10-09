@@ -1,0 +1,253 @@
+= Lab4 - Automatic systems securization through Policies and Checkpoint Management Objects
+
+== 1 - Overview
+
+Once we have the Checkpoint Secure Management Server, and the Checkpoint Secure Gateway configured and ready for being managed by Ansible (remember that we installed the latest Jumbo Hotfix and enabled the api for the SMS), we need to deploy our example Applications and also deploy the Cybersecurity rules & Policies to protect and provide them good hardening.
+
+We will use for our applications 2 different approaches: one server (RHEL1) will be more traditional application server such as https://www.redhat.com/es/technologies/jboss-middleware/web-server[JBoss Server] and the other will be a brand new https://kubernetes.io/[Kubernetes]. 
+
+On top of the Jboss will be deployed a example application, https://github.com/etsauer/ticket-monster-openshift[Ticket Monster]. On the other hand, on top of Kubernetes cluster, a cloud native application will be deployed: https://etherpad.org/[Etherpad].
+
+After that we will deploy route tables in Azure for route all the default traffic from our apps, through the Checkpoint Secure Gateway, and secure ALL the inbound and outbound traffic with rules and policies.
+
+These rules and policies, will be automatically applied from Tower to the Checkpoint SMS, enabling some traffic and some ports/services and securying and hardening our network and apps.
+
+Finally we will check that our RHEL servers can exit to Internet, because of this rules & policies.
+
+=== 1.1 - Goals
+
+* Deploy Jboss Server in RHEL server and deploy the Ticket Monster application
+* Deploy Kubernetes cluster in RHEL server and deploy the Etherpad application
+* Deploy & Configure Route Table, and understand how the traffic is redirected through the Checkpoint Gateway
+* Configure & Deploy Rules, Services & Policies in Checkpoint Secure Management Server.
+* Check that the traffic connectivity is controlled by the Rules and Policies of Checkpoint
+
+== 2 - Lab Specifications
+
+=== Time to complete the lab (approx)
+
+* 15mins
+
+=== Resources involved
+
+* User Web Browser
+* Ansible Tower Portal
+* Windows 10
+* SmartConsole
+
+== 3 - Step by Step Guide
+
+First of all we will deploy Jboss server and Kubernetes in each RHEL, and furthermore we will deploy our example apps. After that we will deploy a rules & policies automatically from Tower that will be configured in the Checkpoint SMS & GW. We will add the route table in order to redirect all Application Layer traffic through the Checkpoint GW. Finally, we will check that we can control the specific traffic with the SmartConsole and Checkpoint.
+
+=== 3.1 - Deploy Aplications into the RHEL systems
+
+First of all we need to deploy the Jboss into RHEL1 and the Kubernetes in the RHEL2. After that we will deploy our apps on top of each of them.
+
+Obviously we will do all of this in a automatic way, so execute the **Lab4_1_Deploy_Applications_to_rhel_servers** Workflow Template in order to trigger the job templates for each task:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_2.png">
+</p>
+++++
+
+This will trigger some job templates that will execute different https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible[playbooks] and https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/rhel[roles]:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_1.png">
+</p>
+++++
+
+Let's dig in a little bit.
+
+==== 3.1.1 - Deploy K8S + App Etherpad 
+
+The Kubernetes cluster and the Etherpad application will be deployed in the RHEL2 server.
+
+Will be two main Job Templates that will execute first, the installation of the Kubernetes cluster (based in https://kind.sigs.k8s.io/[KIND K8s]) and after that the objects for deploy and configure our app (deployment, ingress, and services)
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/app_deploy_k8s.yml[Lab4_deploy_k8s]
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/app_deploy_etherpad_k8s.yml[Lab4_app_deploy_etherpad_k8s]
+
+==== 3.1.2 Deploy Jboss + Ticket Monster App
+
+On the other hand, the JBoss server and the Ticket Monster app will be deployed in the RHEl1 server.
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/app_deploy_jboss.yml[Lab4_app_deploy_jboss_server]
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/app_deploy_jboss.yml[Lab4_deploy_app_ticketmonster]
+
+==== 3.1.3 Check that the Apps are successfully deployed
+
+When the Workflow Templates finishes, in the Windows10 check with the browser the IPs to check if the apps are deployed properly and reachable from the internal subnet (and from Win10 & Tower).
+
+* Check the Ticket Monster app deployed in Jboss Server in the following URL:
+
+```
+http://RHEL1_IP:8080
+```
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_3.png">
+</p>
+++++
+
+* Check the Etherpad app deployed in Kubernetes cluster in the following URL:
+
+```
+http://RHEL2_IP (no 8080, instead 80)
+```
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_4.png">
+</p>
+++++
+
+==== 3.1.4 Video Demo
+
+* Part 1: Deployment of K8S and Jboss + Check the SmartConsole and Checkpoint SMS
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/ZBwJNz47roA]
+endif::[]
+
+* Part 2: Deployment of the apps + Check they are OK deployed
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/1fB_45aiaSg]
+endif::[]
+
+==== 3.2 Deploy the route table in Azure for redirect App traffic through the Checkpoint GW
+
+Now that we have deployed the applications in the RHEL servers, we need to route all the inbound and outbound traffic to/from Internet.
+
+NOTE: If you remember en in lab2 when we deployed the RHEL servers, they cannot exit to Internet, because we were deployed in the App Layer. This is because we want to securize our apps and control to where is connected or will be acceded by. 
+
+Check the high level architecture again:
+
+++++
+<p align="center">
+  <img width="500" height="500" src="../documentation/images/AnsibleFest2020.png">
+</p>
+++++
+
+If you check where the RHELs are deployed, you noticed that are in DMZ Subnet. We want to all the traffic from the DMZ Subnet will be routed through the Checkpoint Gateway and after that redirected to Internet.
+
+In Azure this is accomplished using a Azure Route Table that will route all the traffic from the subnet in DMZ, to the Appliance the Checkpoint SMS.
+
+For example this route table will connect the Internal Subnet DMZ and route the RHEL next gateway to the IP for the checkpoint Secure Gateway.
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_5.png">
+</p>
+++++
+
+For accomplished that, execute in Ansible Tower the Job Template **Lab4_config_azure_route_table_for_apps**, that will trigger the https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/config_ckp_add_route_table.yml[playbook] and https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/ckp/add-route-table/tasks[roles] for that task:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_6.png">
+</p>
+++++
+
+==== 3.2.1 Video Demo
+
+Check out below the implementation of the Azure Route table for Apps:
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/eaJk6W1VGWU]
+endif::[]
+
+
+=== 3.3 Deploy Hosts, Rules and Policies in Checkpoint SMS
+
+Once the applications, and the route tables are deployed successfully its time to apply the Rules & Policies in the Checkpoint Secure Management Server..
+
+We will use the https://docs.ansible.com/ansible/latest/collections/check_point/mgmt/index.html#plugins-in-check-point-mgmt[Checkpoint Ansible Modules] from the collection of https://galaxy.ansible.com/check_point/mgmt[Checkpoint MGMT Collection]
+
+First of all check in the Windows 10, with the SmartConsole that only the default rules & policies are applied:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_7.png">
+</p>
+++++
+
+Execute the Workflow Template of **Lab4_2_Workflow_deploy_security_policies** to trigger the automation of the deployment of the rules & policies:
+
+++++
+<p align="center">
+  <img width="400" src="../documentation/images/lab4_8.png">
+</p>
+++++
+
+After that will trigger some job templates that will be in order:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_9.png">
+</p>
+++++
+
+The job templates are:
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/config_ckp_sec_hosts.yml[Lab4_config_ckp_sec_hosts]
+
+* https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/config_ckp_sec_policies.yml[Lab4_config_ckp_sec_policies]
+
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_10.png">
+</p>
+++++
+
+Meanwhile are deployed, go to the Windows and SmartConsole and check that we are automatically creating the access rules, policies and nat rules in the Checkpoint SMS. 
+
+Select the Security Policies and with the "+" button select the Ansible_Fest_Package Policy recently created:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_11.png">
+</p>
+++++
+
+Check into this Policy the new access rules and nat rules created:
+
+++++
+<p align="center">
+  <img width="800" src="../documentation/images/lab4_12.png">
+</p>
+++++
+
+Inside of a RHEL VM (connect with Powershell or Putty), execute a Curl or a Ping to one IP/DNS from Internet:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_13.png">
+</p>
+++++
+
+It works!!! 
+
+IMPORTANT: What's happened? When a Curl / Ping is executed, the route table is redirecting the traffic through the Checkpoint Gateway. This Gateway have rules & policies applied from the Checkpoint SMS, that allows the curl and icmp services/protocols (check the Outgoing 5 rule in the image).
+
+So, now our RHEL servers are secured and hardened thanks to Ansible Automation & Checkpoint Servers! Magnificent!
+
+==== 3.4 Video Demo
+
+* Check out below the process of deployment & config of the rules & policies in the checkpoint servers and the check of the outbound traffic from our RHEL Servers:
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/cxxY4N9k6O0]
+endif::[]
+
+
+link:lab5.adoc[Next Section -> Lab 5: Application Hardening with Checkpoint Firewall and NAT Rules fully automated]
+
+link:lab3.adoc[Previous Section -> Lab3 - Checkpoint Cibersecurity environment automatic configuration]

@@ -1,0 +1,43 @@
+---
+
+- block: # become: True
+
+  - name: "install epel-release"
+    package:
+      name: "{{ ansible_tower_epel_download_url }}"
+      state: present
+
+  - name: "Download & Unpack Ansible Tower installer"
+    unarchive:
+      src: "{{ ansible_tower_download_url }}"
+      dest: "."
+      list_files: true
+      remote_src: true
+      exclude: "inventory"
+    register: ansible_tower_download_fact
+
+  # The first file listed in the output of the unarchiving from downloading tower
+  # is the directory so set that as ansible_tower_dir
+  - name: "Set installation dir fact"
+    set_fact:
+      ansible_tower_dir: "{{ ansible_tower_download_fact.files.0 }}"
+
+  - name: "Set up the Ansible Tower inventory"
+    template:
+      src: inventory.j2
+      dest: "{{ ansible_tower_dir }}/inventory"
+    register: inventory
+
+  - name: "run tower installer"
+    shell: ./setup.sh
+    args:
+      chdir: "{{ ansible_tower_dir }}"
+
+  - name: "Download and Install the 'oc' client for OpenShift interactions"
+    shell: curl {{ ansible_tower_oc_download_url }} | tar -C /bin/ -xzf -
+    args:
+      warn: False
+    when:
+    - ansible_tower_oc_download_url|trim != ''
+
+  become: True

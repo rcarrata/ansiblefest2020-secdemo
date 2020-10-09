@@ -1,0 +1,74 @@
+---
+
+## Do to a bug in the new checkpoint modules, needs to be performed using the old libraries from https://github.com/CheckPointSW/cpAnsible
+
+- name: "Get API fingerprint"
+  command: >
+    bash -lc "api fingerprint | awk '$0~/SHA1/{print $2}'"
+  register: api_fingerprint
+  run_once: true
+  when: checkpoint_api_fingerprint is not defined
+
+- name: "Set API fingerprint variable"
+  set_fact:
+    checkpoint_api_fingerprint: "{{ api_fingerprint.stdout }}"
+  when: checkpoint_api_fingerprint is not defined
+
+- name: "login"
+  check_point_mgmt:
+    command: login
+    parameters:
+      username: "admin"
+      password: "{{ adminPasswordsms }}"
+      management: "{{ ansible_host }}"
+    fingerprint: "{{ checkpoint_api_fingerprint }}"
+  register: login_response
+  delegate_to: localhost
+  run_once: true
+
+- name: Creating Gateway Object {{ item.name }}
+  check_point_mgmt:
+    command: add-simple-gateway
+    parameters:
+      name: "{{ vmNamegw }}"
+      ipv4-address: "{{ Subnet2StartAddressgw }}"
+      anti-bot: "true"
+      anti-virus: "true"
+      application-control: "true"
+      content-awareness: "false"
+      firewall: "true"
+      interfaces:
+        - name: 'eth0'
+          ipv4-address: "{{ Subnet1StartAddressgw }}"
+          ipv4-mask-length: "24"
+          anti-spoofing: 'true'
+          topology: 'external'
+
+        - name: 'eth1'
+          ipv4-address: "{{ Subnet2StartAddressgw }}"
+          ipv4-mask-length: "24"
+          anti-spoofing: 'true'
+          topology: 'internal'
+          topology-settings:
+           ip-address-behind-this-interface: 'network defined by routing'
+      ips: "true"
+      one-time-password: "{{ otp }}"
+      os-name: "Gaia"
+      url-filtering: "true"
+      version: "R80.30"
+    session-data: "{{ login_response }}"
+  delegate_to: localhost
+
+- name: "publish"
+  check_point_mgmt:
+    command: publish
+    session-data: "{{ login_response }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Perform API logout"
+  check_point_mgmt:
+    command: logout
+    session-data: "{{ login_response }}"
+  delegate_to: localhost
+  run_once: true

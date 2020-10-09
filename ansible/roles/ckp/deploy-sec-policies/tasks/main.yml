@@ -1,0 +1,135 @@
+---
+
+- name: "Add AnsibleFest Package"
+  cp_mgmt_package:
+    color: red
+    comments: Ansible_Fest_Package
+    name: Ansible_Fest_Package
+    access: true
+    threat_prevention: true
+    state: present
+    auto_publish_session: yes
+
+- name: "Set blade for Access_layer_Ansible_fest"
+  cp_mgmt_access_layer:
+    applications_and_url_filtering: true
+    name: Ansible_Fest_Package Network
+    state: present
+    auto_publish_session: yes
+
+- name: "Add rule Do Not Log"
+  cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: Do Not Log
+    position: 1
+    source: Any
+    destination: Any
+    service:
+     - bootp
+     - NBT
+    action: Accept
+    track:
+      type: None
+    state: present
+    auto_publish_session: yes
+
+- name: "Add rule Management"
+  cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: Management
+    position: 2
+    source:
+     - "{{ tower_vm_name }}"
+     - "{{ win10_vm_name }}"
+    destination:
+     - "{{ vmNamegw }}"
+     - "{{ vmNamesms }}"
+    service:
+     - ssh
+     - ssh_version_2
+     - https
+     - icmp-requests
+    action: Accept
+    track:
+      type: Log
+    state: present
+    auto_publish_session: yes
+  loop:
+    - "{{ rhel }}"
+
+- name: "Add rule Stealth"
+  cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: Stealth
+    position: 3
+    source: Any
+    destination:
+     - "{{ vmNamegw }}"
+     - "{{ vmNamesms }}"
+    service: Any
+    action: Drop
+    track:
+      type: Log
+    state: present
+    auto_publish_session: yes
+
+- name: "Add rule DMZ"
+  cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: DMZ
+    position: 4
+    source:
+     - Any
+    destination:
+     - "{{ item.0.vm_name }}"
+     - "{{ item.1.vm_name }}"
+    service:
+     - smtp
+     - http
+     - ftp
+    action: Accept
+    track:
+      type: Log
+    state: present
+    auto_publish_session: yes
+  loop:
+    - "{{ rhel }}"
+
+- name: "Add rule Outgoing"
+  cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: Outgoing
+    position: 5
+    source:
+     - "{{ item.0.vm_name }}"
+     - "{{ item.1.vm_name }}"
+    destination:
+     - Any
+    service:
+     - smtp
+     - http
+     - https
+     - ftp
+     - dns
+     - icmp-requests
+     - ntp
+    action: Accept
+    track:
+      type: Log
+    state: present
+    auto_publish_session: yes
+  loop:
+    - "{{ rhel }}"
+
+- name: Install Policy Access Control
+  cp_mgmt_install_policy:
+    access: true
+    policy_package: Ansible_Fest_Package
+    threat_prevention: false
+
+- name: Install Policy Threat Prevention
+  cp_mgmt_install_policy:
+    access: false
+    policy_package: Ansible_Fest_Package
+    threat_prevention: true
+

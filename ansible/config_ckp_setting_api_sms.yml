@@ -1,0 +1,12 @@
+---
+
+- hosts: ckp-sms
+  gather_facts: False
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Config Checkpoint Setting API SMS'
+      include_role:
+        name: "ckp/settings-api-sms"

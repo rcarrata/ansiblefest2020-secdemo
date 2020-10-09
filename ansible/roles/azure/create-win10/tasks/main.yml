@@ -1,0 +1,96 @@
+---
+
+- name: Create Network Security Group
+  azure_rm_securitygroup:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ win10_net_seg_group }}"
+    rules:
+      - name: 'allow_rdp'
+        protocol: Tcp
+        destination_port_range: 3389
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: 'allow_web_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        access: Allow
+        priority: 1002
+        direction: Inbound
+      - name: 'allow_powershell_remoting'
+        protocol: Tcp
+        destination_port_range:
+          - 5985
+          - 5986
+        access: Allow
+        priority: 1003
+        direction: Inbound
+
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{ main_resgroup }}"
+    allocation_method: Static
+    name: "{{ win10_public_ip }}"
+  register: output_ip_address
+
+- name: Output public IP
+  debug:
+    msg: "The public IP is {{ output_ip_address.state.ip_address }}. Used to connect with RDP"
+
+- name: Create a network interface with public and private IP
+  azure_rm_networkinterface:
+    name: "{{ win10_nic }}"
+    resource_group: "{{ main_resgroup  }}"
+    virtual_network: "{{ main_vnet_name }}"
+    subnet_name: "{{ internal_subnet_name }}"
+    security_group: "{{ win10_net_seg_group }}"
+    ip_configurations:
+      - name: "{{ win10_private_nic }}"
+        public_ip_address_name: "{{ win10_public_ip }}"
+        primary: True
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ win10_private_ip  }}"
+
+- name: Create VM Windows10
+  azure_rm_virtualmachine:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ win10_vm_name }}"
+    vm_size: "{{ win10_vm_size }}"
+    admin_username: "{{ win10_username }}"
+    admin_password: "{{ password }}"
+    network_interfaces: "{{ win10_nic }}"
+    os_type: Windows
+    image:
+      offer: "{{ win10_offer }}"
+      publisher: "{{ win10_publisher }}"
+      sku: "{{ win10_sku }}"
+      version: "{{ win10_version }}"
+
+#- name: Deploy Windows10 on azure for the WinRM
+#  ignore_errors: True
+#  azure_rm_deployment:
+#    state: present
+#    subscription_id: "{{ subscription_id }}"
+#    secret: "{{ secret }}"
+#    client_id: "{{ client_id }}"
+#    tenant: "{{ tenant }}"
+#    location: "{{ location }}"
+#    resource_group_name: "{{ main_resgroup }}"
+#    parameters:
+#      adminUsername:
+#        value: "{{ win10_username }}"
+#      adminPassword:
+#        value: "{{ password }}"
+#      dnsLabelPrefix:
+#        value: "{{ dnsLabelPrefix }}"
+#      vmName:
+#        value: "{{ vmName_w10 }}"
+#      nicName:
+#        value: "{{ win10_nic }}"
+#      virtualNetworkName:
+#        value: "{{ main_vnet_name }}"
+#      publicIPAddressName:
+#        value: "{{ win10_public_ip }}"
+#    template_link: "{{ template_linksms }}"

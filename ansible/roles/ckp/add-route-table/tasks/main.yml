@@ -1,0 +1,24 @@
+---
+
+- name: Create a route table for change gateway to the app layer
+  azure_rm_routetable:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ route_table }}"
+    location: "{{ location }}"
+
+- name: Create a route that will be the App Gateway to the Checkpoint
+  azure_rm_route:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ route_table_name }}"
+    address_prefix: "0.0.0.0/0"
+    next_hop_type: virtual_appliance
+    next_hop_ip_address: "{{ Subnet2StartAddressgw }}"
+    route_table_name: "{{ route_table }}"
+
+- name: Add subnet internal DMZ and attach to the RouteTable
+  azure_rm_subnet:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ internal_subnet_dmz_name }}"
+    address_prefix: "{{ internal_subnet_dmz_ip }}"
+    virtual_network: "{{ main_vnet_name }}"
+    route_table: "{{ route_table }}"

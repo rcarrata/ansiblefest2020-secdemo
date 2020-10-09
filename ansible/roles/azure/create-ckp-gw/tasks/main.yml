@@ -1,0 +1,60 @@
+---
+- name: Create resource group for GW
+  azure_rm_resourcegroup:
+    name: "{{ gw_resgroup }}"
+    location: "{{ location }}"
+
+- name: Deploy Checkpoint GW on Azure
+  ignore_errors: True
+  azure_rm_deployment:
+    state: present
+    subscription_id: "{{ subscription_id }}"
+    secret: "{{ secret }}"
+    client_id: "{{ client_id }}"
+    tenant: "{{ tenant }}"
+    location: "{{ location }}"
+    resource_group_name: "{{ gw_resgroup }}"
+    parameters:
+      location:
+            value: "{{ location }}"
+      cloudGuardVersion:
+            value: "{{ cloudGuardVersiongw }}"
+      adminPassword:
+            value: "{{ adminPasswordgw }}"
+      authenticationType:
+            value: password
+      vmName:
+            value: "{{ vmNamegw }}"
+      vmSize:
+            value: "{{ vmSizegw }}"
+      sicKey:
+            value: "{{ sicKeyGW }}"
+      virtualNetworkName:
+            value: "{{ virtualNetworkNamegw }}"
+      Subnet1Name:
+            value: "{{ Subnet1Namegw }}"
+      Subnet1Prefix:
+            value: "{{ Subnet1Prefixgw }}"
+      Subnet1StartAddress:
+            value: "{{ Subnet1StartAddressgw }}"
+      Subnet2Name:
+            value: "{{ Subnet2Namegw }}"
+      Subnet2Prefix:
+            value: "{{ Subnet2Prefixgw }}"
+      Subnet2StartAddress:
+            value: "{{ Subnet2StartAddressgw }}"
+      vnetNewOrExisting:
+            value: existing
+      virtualNetworkExistingRGName:
+            value: "{{ virtualNetworkExistingRGNamegw }}"
+      allowDownloadFromUploadToCheckPoint:
+            value: 'true'
+      additionalDiskSizeGB:
+            value: 0
+      diskType:
+            value: "{{ diskTypegw }}"
+      sourceImageVhdUri:
+            value: "{{ sourceImageVhdUrigw }}"
+      _artifactsLocation:
+        value: "https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/"
+    template_link: https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/marketplace-single/mainTemplate.json

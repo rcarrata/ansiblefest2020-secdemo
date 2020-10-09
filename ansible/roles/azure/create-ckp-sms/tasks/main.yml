@@ -1,0 +1,56 @@
+---
+- name: Create resource group for SMS
+  azure_rm_resourcegroup:
+    name: "{{ sms_resgroup }}"
+    location: "{{ location }}"
+
+- name: Deploy SMS on azure
+  ignore_errors: True
+  azure_rm_deployment:
+    state: present
+    subscription_id: "{{ subscription_id }}"
+    secret: "{{ secret }}"
+    client_id: "{{ client_id }}"
+    tenant: "{{ tenant }}"
+    location: "{{ location }}"
+    resource_group_name: "{{ sms_resgroup }}"
+    parameters:
+      location:
+        value: "{{ location }}"
+      cloudGuardVersion:
+        value: "{{ cloudGuardVersionsms }}"
+      adminPassword:
+        value: "{{ adminPasswordsms }}"
+      authenticationType:
+        value: "{{ authenticationTypesms }}"
+      vmName:
+        value: "{{ vmNamesms }}"
+      vmSize:
+        value: "{{ vmSizesms }}"
+      virtualNetworkName:
+        value: "{{ virtualNetworkNamesms }}"
+      Subnet1Name:
+        value: "{{ Subnet1Namesms }}"
+      Subnet1Prefix:
+        value: "{{ Subnet1Prefixsms }}"
+      Subnet1StartAddress:
+        value: "{{ Subnet1StartAddresssms }}"
+      vnetNewOrExisting:
+        value: existing
+      virtualNetworkExistingRGName:
+        value: "{{ main_resgroup }}"
+      managementGUIClientNetwork:
+        value: "{{ managementGUIClientNetworksms }}"
+      installationType:
+        value: "{{ installationTypesms }}"
+      allowDownloadFromUploadToCheckPoint:
+        value: 'true'
+      additionalDiskSizeGB:
+        value: 0
+      diskType:
+        value: "{{ diskTypesms }}"
+      sourceImageVhdUri:
+        value: "{{ sourceImageVhdUrisms }}"
+      _artifactsLocation:
+        value: "https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/"
+    template_link: https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/marketplace-management/mainTemplate.json

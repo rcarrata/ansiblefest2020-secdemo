@@ -1,0 +1,67 @@
+= Lab0 - Lab Overview & Prerequisites
+
+== 1 - Overview
+
+The purpose of this lab is to demonstrate how with Ansible you will be able to deploy, manage and customize a Cybersecurity scenario in a fully cloud native environment.  
+
+All is Infrastructure as Code (IaC). This is the motto of this lab, and it is basically that every resource in Azure, object in Tower, package in Tower, or policy in Checkpoint will be code. 
+
+The definitions are in a version control system (git). It will use Ansible definitions as a declarative approach to provision and manage all of the resources in this lab, rather than manual processes.
+
+The value of IaC can be broken down into three measurable categories: cost (reduction), speed (faster execution) and risk (remove errors and security violations).
+
+On the other lab involves several and different elements including resources in:
+
+* Ansible Tower & Ansible Automation
+* Microsoft Azure
+* Checkpoint GW & SMS
+* Microsoft Windows10
+* RHEL
+
+**You will start with access only to Ansible Tower**, and from here and fully automated the rest of the lab will be provisioned. Cool, right?
+
+== 2 - Prerequisites
+
+This lab is geared towards systems administrators, cloud administrators and operators, architects, and others working on infrastructure operations management who are interested in learning how to automate security and compliance across their heterogeneous infrastructure using one or more Red Hat and Checkpoint Products.
+
+The Prerequisites for this lab include to have installed and available an RDP Client such as:
+
+* https://remmina.org/how-to-install-remmina/[Remmina for Linux]
+* https://support.microsoft.com/en-us/help/4028379/windows-10-how-to-use-remote-desktop[Remote Desktop for Windows]
+* https://apps.apple.com/app/microsoft-remote-desktop/id1295203466?mt=12[Microsoft Remote Desktop for Mac]
+
+RDP is used to connect to the Windows10 VM deployed inside the lab, that is used for management. Please install it before to start any lab.
+
+== 3 - Lab High Level Diagram
+
+The following diagram shows the high level diagram of the infrastructure in Azure that will be used within this lab:
+
+++++
+<p align="center">
+  <img width="500" height="500" src="../documentation/images/AnsibleFest2020.png">
+</p>
+++++
+
+There are several components but the most important are:
+
+* DevSecOps Engineer Laptop - Your laptop where you will connect to this services.
+* https://www.ansible.com/products/tower[Red Hat Ansible Tower] [Public IP] - Where all the automations & all the magic will be happening.
+* Windows 10 [Public IP] - Internal Windows used to perform the several labs in this repo. All VMs and services will be reachable from here.
+* RHEL1 [Private IP]: Red Hat Linux Enterprise VM where a JBoss Server will be deployed and the Ticket Monster app will be deployed in this JBoss
+* RHEL2 [Private IP]: Red Hat Linux Enterprise VM where a Kubernetes cluster will be deployed and a Etherpad app will be deployed in this Kubernetes node.
+* https://www.checkpoint.com/products/cyber-security-management/[Checkpoint Security Management Server][Private IP]: unified management control across all networks and cloud environment
+* https://www.checkpoint.com/cyber-hub/network-security/what-is-secure-web-gateway/[Checkpoint Security Gateway][Public IP]: A secure web gateway protects an organization from online security threats and infections by enforcing company policy and filtering Internet-bound traffic.
+
+Remember that only **Ansible Tower** will be pre-provisioned. The rest of the elements will be provisioned as you are progressing in the labs.
+
+== 4. Where I start?
+
+You will have access to **only one thing** in the this step: Ansible Tower. 
+
+NOTE: in the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor for check these information.
+
+From here you will deploy on your own, and in real time the whole rest of the lab. So, go to the next chapter in order to know more details about the lab!
+
+link:lab1.adoc[Next Section -> Lab 1 - Integrating Ansible Tower with DevOps and Cloud Tools]
+
+link:../README.adoc[Previous Section -> Table Content]

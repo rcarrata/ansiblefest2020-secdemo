@@ -1,0 +1,216 @@
+= Lab5 - Application Hardening with Checkpoint Firewall and NAT Rules fully automated
+
+== 1 - Overview
+
+Now we that we have deployed our apps, and secured through Checkpoint SMS & GW with policies & rules we are secure because we can control the traffic that is origined inside of our subnets in our Azure scenario. 
+
+But... wait! How about the inbound traffic? How can my users access to my applications, in a secure and monitored way?
+
+We will use the Checkpoint Gateway to expose our Nat Rules, and with a NAT we will control and expose specific ports to redirect our users through the Gateway and with destination of our RHEL apps.
+
+In this way, we not only control our ports or the apps, also we can filter, monitor and control everything that is trying to access to our services & applications.
+
+=== 1.1 - Goals
+
+* Understand how the Nat Rules in Checkpoint works
+* Deploy from Ansible Tower automatically Kubernetes & JBoss Services and Hosts in Checkpoint GW & SMS, and apply them a NAT Rule
+* Understand how the apps services are exposed through Internet using the Checkpoint Secure GW
+* Test our connection and services of our applications Etherpad & Ticket Monster that are Internet exposed 
+
+== 2 - Lab Specifications
+
+==== Time to complete the lab (approx)
+
+* 15mins
+
+==== Resources involved
+
+* User Web Browser
+* Ansible Tower Portal
+* Windows 10
+* SmartConsole
+
+== 3 - Guide
+
+Once the applications are deployed in the RHELs, and we have secured the outbound and internal traffic with the Checkpoint Policies and Rules, it's time to expose them through Checkpoint Gateway that will act (amont multiple other things) as a Firewall and one IP for the entry point for our apps, exposing several services & apps.
+
+First we will automatically deploy the new services that correspond with our Services (Kubernetes & Jboss), after create an object for the Checkpoint GW. After that we will create the Hide NAT Rule to expose our two services from the Gateway. And finally for we will create a Access Rule for allow the traffic through the 
+
+And finally we need to check our services exposed to Internet through the Checkpoint GW. 
+
+=== 3.1 - Deploy Policies in Checkpoint
+
+First we need to check that are not applied additional NAT or Access rules in the Security Policies Button in the Checkpoint (beside the rules applied in the last lab):
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab4_14.png">
+</p>
+++++
+
+Check the Policies to verify that only the latest rules of lab4 are present:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab5_11.png">
+</p>
+++++
+
+Now, we need to deploy the Nat Rules, Hosts, Services and Access Rules automatically, so in the Ansible Tower execute **Lab5_deploy_nat_rules_for_apps**:
+
+++++
+<p align="center">
+  <img width="300" src="../documentation/images/lab5_2.png">
+</p>
+++++
+
+After that a https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/config_ckp_nat_rules.yml[playbook] will be executed within this Job Template job:
+
+++++
+<p align="center">
+  <img width="700" src="../documentation/images/lab5_3.png">
+</p>
+++++
+
+Go to the SmartConsole in the Windows10 VM, and check that in the NAT Rules in the Security Policies -> NAT, appeared two new rules:
+
+++++
+<p align="center">
+  <img width="700" src="../documentation/images/lab5_4.png">
+</p>
+++++
+
+The first rule is for expose the JBoss Services and the second one is for expose the Kubernetes Services:
+
+The rules are composed for:
+
+* Original Destination: ckp_gw_external (in the right bar in the search object, search in the Network Objects -> Networks -> Hosts)
+
+++++
+<p align="center">
+  <img width="200" src="../documentation/images/lab5_5.png">
+</p>
+++++
+
+* Original Services: (Go to Services -> TCP and search for Kubernetes and JBoss services):
+
+++++
+<p align="center">
+  <img width="200" src="../documentation/images/lab5_6.png">
+</p>
+++++
+
+This objects exposes the Kubernetes service in the Port **5333** and the JBoss in the Port **5334**.
+
+* Translated Destination: RHEL1 and RHEL2
+
+* Translated Services: **HTTP_Proxy** (8080) for the JBoss service, and the **http** for the Kubernetes.
+
+++++
+<p align="center">
+  <img width="300" src="../documentation/images/lab5_13.png">
+</p>
+++++
+
+Finally in the Policy, an Access rule are also created for allow the inbound traffic from Any source (any internet web browser), to the Gateway to our two specific Services created: Kubernetes_Services & JBoss Service:
+
+++++
+<p align="center">
+  <img width="800" src="../documentation/images/lab5_7.png">
+</p>
+++++
+
+IMPORTANT: All of this objects, rules, etc are automatically created by the https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/roles/ckp/deploy-nat-rules/tasks/main.yml[playbook] from Ansible Tower.
+
+
+=== 3.2 - Check Policies
+
+Now that we have created all the access, nat and policy rules, we need to test the Services exposed. 
+
+But first of all, obtain your Checkpoint Public IP, that is available in Tower in the **Lab2_deploy_ckp_gw**, so open the Jobs section in Ansible Tower, or pick the green icon in the Templates:
+
+++++
+<p align="center">
+  <img width="300" src="../documentation/images/lab5_14.png">
+</p>
+++++
+
+And click in the second task (where changed: [localhost] is outputed in yellow color). Opened for obtain the Public IP:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab5_1.png">
+</p>
+++++
+
+NOTE: remember that this is only orientative. Your public ip will not be the same as shown in the pic before.
+
+Open a browser in your laptop (outside of Windows10 VM) and check your Kubernetes and Etherpad services exposed through the Checkpoint Gateway: 
+
+* Etherpad on Kubernetes:
+
+```
+publicIP:5333
+```
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab5_15.png">
+</p>
+++++
+
+* Ticket Monster in JBoss:
+
+```
+publicIP:5334
+```
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab5_16.png">
+</p>
+++++
+
+You can now check the inbound access to our applications, because is all monitored in our Checkpoint Secure Gateway. Go to the SmartConsole and to the Security Policy and select the Rule deployed **Application_Access_Rule_Internet** in the 3r position. Below in Logs, select the timeline and put it in Last Hour and see the inbound connections:
+
+++++
+<p align="center">
+  <img width="800" src="../documentation/images/lab5_17.png">
+</p>
+++++
+
+Open one inbound connection in the logs and see more details about that:
+
+++++
+<p align="center">
+  <img width="700" src="../documentation/images/lab5_8.png">
+</p>
+++++
+
+And that's all folks! Hope that you enjoyed
+
+== 4 - Video Demonstration
+
+Click below and you will be redirected to the lab video:
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/CmoymkhQrKA]
+endif::[]
+
+ifndef::env-github[]
+video::wlrmjJvPHko[youtube]
+endif::[]
+
+== 5 - BIG Thank you!!
+
+Thanks for complete this lab! 
+
+Hope that you enjoyed as much as we enjoyed creating and testing this. Remember that this built from scratch so any improvement and additional labs are very welcome! 
+
+Pull requests and Issues are very welcome!
+
+Have a very nice day!
+
+Rober & Diego
+
+link:lab4.adoc[Previous Section -> Lab4 - Automatic systems securization through Policies and Checkpoint Management Objects]

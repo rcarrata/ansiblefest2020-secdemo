@@ -1,0 +1,43 @@
+---
+
+- name: Wait for API to become available
+  shell: bash -lc "api status" | awk '$0~/API Status/{print $4}'
+  register: api_result
+  retries: 70
+  delay: 30
+  until: api_result.stdout.find('Started') != -1
+
+- name: "Set command API ENABLE all IPS"
+  set_fact:
+    api_enable: mgmt_cli -r true set api-settings accepted-api-calls-from "All IP addresses" --domain "System Data"
+
+- name: Change API settings
+  command: >
+      bash -lc '{{ api_enable }}'
+  register: mgmt_cli_output
+  retries: 15
+  delay: 10
+  until: mgmt_cli_output.rc == 0
+
+- name: Change API settings
+  command: >
+      bash -lc "mgmt_cli -r true publish"
+  register: mgmt_cli_output
+  retries: 15
+  delay: 10
+  until: mgmt_cli_output.rc == 0
+
+- name: Restart API service
+  command: bash -lc 'api restart'
+  register: api_output
+  retries: 15
+  delay: 10
+  until: api_output.rc == 0
+
+- name: Wait for API to become available
+  shell: bash -lc "api status" | awk '$0~/API Status/{print $4}'
+  register: api_result
+  retries: 70
+  delay: 30
+  until: api_result.stdout.find('Started') != -1
+

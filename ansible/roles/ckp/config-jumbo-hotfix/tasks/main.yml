@@ -1,0 +1,103 @@
+---
+
+- name: "Download DeploymentAgent"
+  get_url:
+    url: "{{ ckp_deployagent_blob }}"
+    dest: "/tmp/{{ deployagent_pkg }}"
+    validate_certs: no
+
+- name: "Uncompress the file"
+  command: chdir=/tmp/ tar -zxvf DeploymentAgent_000001959_1.tgz
+  register: jhf_uncompress
+  delay: 1
+  until: >
+    jhf_uncompress.stdout.find("CPda-00-00.i386.rpm") != -1
+
+- name: "Install the CPUSE Agent RPM"
+  command: chdir=/tmp/ rpm -Uhv --force CPda-00-00.i386.rpm
+  register: cpuse_agent_reg
+  delay: 1
+  until: >
+    cpuse_agent_reg.stdout.find("CPda                        ##################################################") != -1
+
+- name: "Kill all running Clish deamons"
+  command: >
+    bash -lc 'killall -v clish clishd'
+
+- name: "Restart the ConfD deamon"
+  command: >
+    bash -lc 'tellpm process:confd'
+
+- name: "Restart the ConfD deamon"
+  command: >
+    bash -lc 'tellpm process:confd t'
+
+- name: "Start the CPUSE Agent manually"
+  command: >
+    bash -lc '$DADIR/bin/dastart'
+  register: cpuse_agent_start
+  delay: 1
+  until: >
+    cpuse_agent_start.stdout.find("Process DASERVICE started successfully") != -1
+
+- name: "Wait Agent update finished"
+  command: >
+    bash -lc "clish -c 'show installer status'"
+  register: agent_install
+  retries: 10
+  delay: 5
+  until: agent_install.stdout.find("agent build is up to date") != -1
+
+- name: "Downloading JumboHotfix"
+  get_url:
+    url: "{{ ckp_jumbohotfix_blob }}"
+    dest: "/tmp/{{ jumbohotfix_pkg }}"
+    validate_certs: no
+
+- name: "Import Jumbo Hotfix package from local Security Management Server to Agent"
+  command: >
+    bash -lc "clish -c 'installer import local /tmp/Check_Point_R80_30_JUMBO_HF_Bundle_T217_sk153152_Security_Management_3_10_FULL.tgz'"
+  register: jhf_import
+  retries: 30
+  delay: 5
+  until: >
+    jhf_import.stdout.find("was successfully imported") != -1 or
+    jhf_import.stdout.find("already exists in your machine") != -1
+
+- name: "Verify Jumbo Hotfix package via Agent"
+  command: >
+    bash -lc "clish -c 'installer verify Check_Point_R80_30_JUMBO_HF_Bundle_T217_sk153152_Security_Management_3_10_FULL.tgz'"
+  register: jhf_verify
+  retries: 30
+  delay: 10
+  until: jhf_verify.stdout.find("Installation is allowed") != -1
+
+- name: "Install Jumbo Hotfix via Agent"
+  command: >
+    bash -lc "clish -c 'installer install Check_Point_R80_30_JUMBO_HF_Bundle_T217_sk153152_Security_Management_3_10_FULL.tgz not-interactive'"
+
+- name: "Checking Jumbo Hotfix installation is Installed"
+  command: >
+    bash -lc "clish -c 'show installer package Check_Point_R80_30_JUMBO_HF_Bundle_T217_sk153152_Security_Management_3_10_FULL.tgz status'"
+  register: jhf_status
+  retries: 150
+  delay: 5
+  until: jhf_status.stdout.find("Installed") != -1
+
+- name: "SMS Rebooting"
+  debug:
+    msg: "Checkpoint SMS Rebooting..."
+
+- name: "Waiting for connection to SMS become reachable"
+  wait_for_connection:
+    connect_timeout: 60
+    timeout: 360
+    delay: 60
+
+- name: "Waiting for SSH connection to SMS become available"
+  wait_for:
+    port: 22
+    host: '{{ ansible_host }}'
+    search_regex: OpenSSH
+    delay: 10
+  connection: local

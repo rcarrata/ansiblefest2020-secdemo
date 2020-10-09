@@ -1,0 +1,18 @@
+---
+
+- hosts: ckp-sms
+  gather_facts: False
+  connection: httpapi
+  vars_files:
+    - vars/common.yml
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+  vars:
+    ansible_httpapi_use_ssl: True
+    ansible_httpapi_validate_certs: False
+    ansible_network_os: "checkpoint"
+    ansible_connection: "httpapi"
+  tasks:
+    - name: '[ANSIBLEFEST] Deploy Security Policies into Checkpoint sms'
+      include_role:
+        name: "ckp/deploy-sec-policies"

@@ -1,0 +1,6 @@
+---
+
+- name: "Add subnet dmz static route to the checkpoint gw"
+  command: >
+    bash -lc "clish -c 'set static-route {{ internal_subnet_dmz_ip }} nexthop gateway address {{ internal_subnet_ip_first }} on' -s"
+

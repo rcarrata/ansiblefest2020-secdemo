@@ -1,0 +1,15 @@
+
+[tower]
+localhost ansible_connection=local
+
+[database]
+
+[all:vars]
+admin_password='{{ ansible_tower.admin_password }}'
+
+pg_host="{{ ansible_tower.install.pg.host | default('') }}"
+pg_port="{{ ansible_tower.install.pg.port | default('') }}"
+pg_database="{{ ansible_tower.install.pg.database | default('awx') }}"
+pg_username="{{ ansible_tower.install.pg.username | default('awx') }}"
+pg_password="{{ ansible_tower.install.pg.password | default(ansible_tower.admin_password) }}"
+

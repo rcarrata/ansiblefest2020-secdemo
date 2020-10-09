@@ -1,0 +1,77 @@
+---
+
+tower_hostname: "localhost"
+tower_username: "admin"
+tower_password: "{{ admin_vault_password }}"
+tower_validate_certs: False
+
+# Ansible Tower Configuration
+ansible_tower:
+  url: "https://{{ hostvars[groups['ansible-tower'] | first ].ansible_host }}"
+  admin_username: "admin"
+  admin_password: "{{ admin_vault_password }}"
+  validate_certs: false
+  install:
+    license_file: "{{ playbook_dir }}/files/license.json"
+    pg:
+      username: 'tower'
+      password: "{{ pg_vault_password }}"
+    rabbitmq:
+      port: 5672
+      use_long_name: false
+      password: "{{ rabbitmq_vault_password  }}"
+  credentials:
+  - name: "Vault"
+    description: "Vault"
+    organization: "Default"
+    credential_type: "Vault"
+    inputs:
+      vault_password: "{{ vault_password }}"
+  - name: "azure_creds"
+    description: "azure_creds"
+    organization: "Default"
+    credential_type: "Microsoft Azure Resource Manager"
+    inputs:
+      client: "{{ client_id }}"
+      secret: "{{ secret }}"
+      tenant: "{{ tenant }}"
+      subscription: "{{ subscription_id }}"
+  - name: "VMKey"
+    description: "VMKey Machine"
+    organization: "Default"
+    credential_type: "Machine"
+    inputs:
+      username: "azureuser"
+      password: "{{ password }}"
+      become_method: sudo
+  - name: "Source Control"
+    description: "Source Control"
+    organization: "Default"
+    credential_type: "Source Control"
+    inputs:
+      username: "{{ github_username }}"
+      ssh_key_data: "{{ ssh_key_data }}"
+  inventories:
+  - name: "ansible-tower"
+    organization: "Default"
+    hosts:
+    - name: "ansible-tower"
+      variables: "---\\nansible_host: localhost"
+  projects:
+  - name: "ansiblefest2020-project"
+    description: "Ansible Fest 2020 Repo"
+    scm_type: "git"
+    scm_url: "https://github.com/rcarrata/ansiblefest2020-secdemo.git"
+    scm_branch: "master"
+    organization: "Default"
+    #credential: "5"
+  job_templates:
+  - name: "Lab1_config_tower_objects"
+    description: "Lab1 Config Tower Objects for Cybersec lab"
+    inventory: "ansible-tower"
+    project: "ansiblefest2020-project"
+    playbook: "ansible/configure_tower.yml"
+    extra_vars: "---\\nlab_name: {{ lab_name }}\\n"
+    credentials:
+    - "Vault"
+    - "VMKey"

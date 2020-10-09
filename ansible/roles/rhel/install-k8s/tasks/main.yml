@@ -1,0 +1,124 @@
+---
+# tasks file for rhel/install-k8s/
+
+- name: Add Kubernetes Repo
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes
+    baseurl: "https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64"
+    gpgkey: "https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
+    gpgcheck: yes
+
+- name: Add Prereqs for K8s
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop:
+   - kubectl
+   - docker
+
+- name: Start docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Download K8S
+  get_url:
+    url: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
+    dest: "/usr/bin/kind"
+    mode: '0755'
+
+- name: Template Kind
+  template:
+    src: templates/config-kind.yml.j2
+    dest: "/opt/config-kind.yml"
+    mode: '0644'
+
+- name: Deploy the K8S cluster, or pass if its deployed
+  block:
+    - name: Create K8s cluster
+      command: "/usr/bin/kind create cluster --config=/opt/config-kind.yml"
+  rescue:
+    - name: Cluster Installed!
+      debug:
+        msg: "Cluster already Installed"
+
+- name: Deploy ingress controller with Contour
+  command: "kubectl apply -f https://projectcontour.io/quickstart/contour.yaml"
+
+#- name: Deploy Ingress Controller with Contour
+#  k8s:
+#    state: present
+#    merge_type:
+#    - strategic-merge
+#    - merge
+#    definition: "{{ lookup('template', 'contour.yaml') }}"
+
+- name: 'Patch the contour for accept ingress'
+  command: "kubectl patch daemonsets -n projectcontour envoy -p '{\"spec\":{\"template\":{\"spec\":{\"nodeSelector\":{\"ingress-ready\":\"true\"},\"tolerations\":[{\"key\":\"node-role.kubernetes.io/master\",\"operator\":\"Equal\",\"effect\":\"NoSchedule\"}]}}}}'"
+
+#- name: 'Patch the contour for accept ingress'
+#  k8s:
+#    state: present
+#    merge_type: merge
+#    name: contour
+#    namespace: projectcontour
+#    kind: DaemonSet
+#    api_version: apps/v1
+#    definition:
+#      spec:
+#        nodeSelector:
+#          ingress-ready: "true"
+#      tolerations:
+#      - effect: NoSchedule
+#        key: node-role.kubernetes.io/master
+#        operator: Equal
+
+#kubectl patch daemonsets -n projectcontour envoy -p '{"spec":{"template":{"spec":{"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}'
+
+#yum install docker -y
+#systemctl restart docker
+#curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
+#chmod +x ./kind
+#mv kind /usr/bin/
+#
+#cat <<EOF | kind create cluster --config=-
+#> kind: Cluster
+#> apiVersion: kind.x-k8s.io/v1alpha4
+#> nodes:
+#> - role: control-plane
+#>   kubeadmConfigPatches:
+#>   - |
+#>     kind: InitConfiguration
+#>     nodeRegistration:
+#>       kubeletExtraArgs:
+#>         node-labels: "ingress-ready=true"
+#>   extraPortMappings:
+#>   - containerPort: 80
+#>     hostPort: 80
+#>     protocol: TCP
+#>   - containerPort: 443
+#>     hostPort: 443
+#>     protocol: TCP
+#> EOF
+#
+#cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+#[kubernetes]
+#name=Kubernetes
+#baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+#enabled=1
+#gpgcheck=1
+#repo_gpgcheck=1
+#gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+#EOF
+#yum install -y kubectl
+
+#kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+#kubectl patch daemonsets -n projectcontour envoy -p '{"spec":{"template":{"spec":{"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}'
+#
+#
+#kubectl -n default apply -k github.com/gobengo/etherpad-lite.git/lib/etherpad-lite-k8s
+
+
+

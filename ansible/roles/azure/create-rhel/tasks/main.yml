@@ -1,0 +1,53 @@
+---
+# tasks file for create-rhel
+
+- name: Create Network Security Group
+  azure_rm_securitygroup:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ rhel_net_seg_group }}"
+    rules:
+      - name: 'allow_web_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: 'allow_ssh_traffic'
+        protocol: Tcp
+        destination_port_range:
+          - 22
+        access: Allow
+        priority: 1002
+        direction: Inbound
+
+- name: Create a network interface with private IP address only
+  azure_rm_networkinterface:
+    name: "{{ item.nic }}"
+    resource_group: "{{ main_resgroup }}"
+    virtual_network: "{{ main_vnet_name }}"
+    subnet_name: "{{ internal_subnet_dmz_name }}"
+    security_group: "{{ rhel_net_seg_group }}"
+    ip_configurations:
+      - name: "{{ item.private_nic }}"
+        private_ip_address: "{{ item.private_ip }}"
+        primary: True
+        private_ip_allocation_method: Static
+  loop: "{{ rhel }}"
+
+- name: Create RHEL VM
+  azure_rm_virtualmachine:
+    resource_group: "{{ main_resgroup }}"
+    name: "{{ item.vm_name }}"
+    vm_size: "{{ rhel_vm_size }}"
+    admin_username: "{{ rhel_username }}"
+    admin_password: "{{ password }}"
+    network_interfaces: "{{ item.nic }}"
+    image:
+      offer: "{{ rhel_offer }}"
+      publisher: "{{ rhel_publisher }}"
+      sku: "{{ rhel_sku }}"
+      version: "{{ rhel_version }}"
+  loop: "{{ rhel }}"
+

@@ -1,0 +1,20 @@
+---
+
+- name: "Destroy Checkpoint SMS"
+  azure_rm_resourcegroup:
+    name: "{{ item }}"
+    location: "{{ location }}"
+    state: absent
+    force_delete_nonempty: yes
+  loop:
+    - "{{ sms_resgroup }}"
+
+- name: "Create Checkpoint GW"
+  azure_rm_resourcegroup:
+    name: "{{ item }}"
+    location: "{{ location }}"
+    state: absent
+    force_delete_nonempty: yes
+  loop:
+    - "{{ gw_resgroup }}"
+

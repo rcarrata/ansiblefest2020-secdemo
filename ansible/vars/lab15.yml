@@ -1,0 +1,32 @@
+---
+
+##### Azure Net Infra
+lab_name: lab15
+location: "francecentral"
+main_resgroup: "ansiblefest_main_rg"
+main_vnet_name: "ansiblefest_main_vnet"
+vnet_ip: "172.16.0.0/16"
+external_subnet_ip: "172.16.42.0/24" # Chkp GW
+internal_subnet_ip: "172.16.43.0/24" # Tower, Chkp SMS, Chkp GW & Win10
+internal_subnet_ip_first: "172.16.43.1"
+internal_subnet_dmz_ip: "172.16.44.0/24" # RHEL / App Subnet
+internal_subnet_dmz_net: "172.16.44.0"
+
+Subnet1StartAddresssms: "172.16.43.9" #ckp sms
+Subnet1StartAddressgw: "172.16.42.153" #ckp gw eth0
+Subnet2StartAddressgw: "172.16.43.153" #ckp gw eth1
+win10_private_ip: "172.16.43.6"
+tower_private_ip: "172.16.43.5"
+rhel1_private_ip: "172.16.44.11"
+rhel2_private_ip: "172.16.44.12"
+
+rhel:
+  - vm_name: "rhel1{{ lab_name }}"
+    nic: "rhel_nic1_{{ lab_name }}"
+    private_nic: "rhel_private_nic1_{{ lab_name }}"
+    private_ip: "172.16.44.11"
+  - vm_name: "rhel2{{ lab_name }}"
+    nic: "rhel_nic2_{{ lab_name }}"
+    private_nic: "rhel_private_nic2_{{ lab_name }}"
+    private_ip: "172.16.44.12"
+

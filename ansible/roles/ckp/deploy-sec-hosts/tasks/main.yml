@@ -1,0 +1,80 @@
+---
+
+- name: "Add Host Win 10"
+  cp_mgmt_host:
+    color: blue
+    name: "{{ win10_vm_name }}"
+    ip_address: "{{ win10_private_ip }}"
+    state: present
+    auto_publish_session: yes
+
+- name: "Add Host RHEL1"
+  cp_mgmt_host:
+    color: red
+    name: "{{ item.0.vm_name }}"
+    ip_address: "{{ item.0.private_ip }}"
+    state: present
+    auto_publish_session: yes
+  loop:
+    - "{{ rhel }}"
+
+- name: "Add Host RHEL2"
+  cp_mgmt_host:
+    color: red
+    name: "{{ item.1.vm_name }}"
+    ip_address: "{{ item.1.private_ip }}"
+    state: present
+    auto_publish_session: yes
+  loop:
+    - "{{ rhel }}"
+
+- name: "Add Host Tower"
+  cp_mgmt_host:
+    color: red
+    name: "{{ tower_vm_name }}"
+    ip_address: "{{ tower_private_ip }}"
+    state: present
+    auto_publish_session: yes
+
+- name: "Add network internal dmz"
+  cp_mgmt_network:
+    color: dark green
+    name: "{{ internal_subnet_dmz_name }}"
+    state: present
+    subnet: "{{ internal_subnet_dmz_net }}"
+    subnet_mask: 255.255.255.0
+    auto_publish_session: yes
+    nat_settings:
+      hide_behind: gateway
+      method: hide
+      auto_rule: yes
+
+#- name: "Add Gateway" #Call add-simple-gateway-old-school.yml
+#  cp_mgmt_simple_gateway:
+#    name: "chkpgwansiblefest"
+#    ipv4_address: "172.16.1.254"
+#    os_name: "R80.30"
+#    anti_bot: 'true'
+#    anti_virus: 'true'
+#    application_control: 'true'
+#    firewall: 'true'
+#    ips: 'true'
+#    one_time_password: "4ns1bl3"
+#    url_filtering: 'true'
+#    interfaces:
+#     - name: 'eth0'
+#       ipv4-address: "172.16.0.254"
+#       ipv4-mask-length: "24"
+#       anti-spoofing: 'true'
+#       topology: 'external'
+#
+#     - name: 'eth1'
+#       ipv4-address: "172.16.1.254"
+#       ipv4-mask-length: "24"
+#       anti-spoofing: 'true'
+#       topology: 'internal'
+#       topology-settings:
+#         ip-address-behind-this-interface: 'network defined by routing'
+#    state: present
+#    auto_publish_session: yes
+

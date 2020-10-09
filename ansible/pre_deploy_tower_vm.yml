@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  roles:
+    - azure/create-tower

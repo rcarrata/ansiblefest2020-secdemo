@@ -1,0 +1,14 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Destroy the Azure Net Infrastructure'
+      include_role:
+        name: "azure/destroy-azure-infra"
+
+

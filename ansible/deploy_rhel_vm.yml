@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vars/common.yml
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+  roles:
+    - azure/create-rhel

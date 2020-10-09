@@ -1,0 +1,36 @@
+---
+
+- name: Copy Objects
+  copy:
+    src: "templates/{{ item }}"
+    dest: "/opt/{{ item }}"
+  loop:
+    - ingress.yml
+    - deployment.yml
+
+- name: 'Deploy Etherpad application deployment in K8s'
+  command: "kubectl -n default apply -f /opt/deployment.yml"
+
+- name: 'Deploy Ingress Service for Etherpad application in K8s'
+  command: "kubectl -n default apply -f /opt/ingress.yml"
+
+- name: Wait until the pods are ok
+  pause:
+    seconds: 60
+
+## This is the k8s ansible modules
+#- name: 'Deploy Etherpad application deployment in K8s'
+#  k8s:
+#    state: present
+#    merge_type:
+#    - strategic-merge
+#    - merge
+#    definition: "{{ lookup('template', 'deployment.yml') }}"
+#
+#- name: 'Deploy Ingress Service for Etherpad application in K8s'
+#  k8s:
+#    state: present
+#    merge_type:
+#    - strategic-merge
+#    - merge
+#    definition: "{{ lookup('template', 'ingress.yml') }}"

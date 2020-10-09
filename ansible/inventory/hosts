@@ -1,0 +1,47 @@
+[ansible-tower]
+#tower-ansiblefest.francecentral.cloudapp.azure.com ansible_host="tower-ansiblefest.francecentral.cloudapp.azure.com"
+
+[ansible-tower:vars]
+ansible_ssh_user=azureuser
+ansible_ssh_pass="{{ password }}"
+ansible_become_pass="{{ password }}"
+ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
+#ansible_ssh_private_key_file=~/.ssh/.key
+
+[tower-management-host:children]
+ansible-tower
+
+[w10]
+win10 ansible_host="172.16.1.6"
+
+#[w10:vars]
+#ansible_ssh_user="azureuser"
+#ansible_ssh_pass="xxxxx" -> Vault
+#ansible_connection="winrm"
+#ansible_winrm_server_cert_validation=ignore
+#ansible_ssh_port=5986
+
+[ckp-sms]
+ckp-sms ansible_host="172.16.1.9"
+
+[ckp-gw]
+ckp-gw ansible_host="172.16.1.9"
+
+[internal]
+tower ansible_host="172.16.1.5"
+win10 ansible_host="172.16.1.6"
+rhel1 ansible_host="172.16.1.7"
+rhel2 ansible_host="172.16.1.8"
+ckp-sms ansible_host="172.16.1.9"
+ckp-gw ansible_host="172.16.1.253"
+
+#[ckp-sms:vars]
+#ansible_httpapi_use_ssl=True
+#ansible_httpapi_validate_certs=False
+#ansible_network_os="checkpoint"
+#ansible_user="admin"
+#ansible_password="xxxxx" -> Vault
+
+[rhel]
+rhel1 ansible_host="172.16.1.7"
+rhel2 ansible_host="172.16.1.8"

@@ -1,0 +1,21 @@
+---
+
+- name: "[ENTERPRISE-DEMO][CONFIG-JBOSS][JBOSS-SELINUX] Download EPEL Repo - Centos/RHEL 7"
+  get_url:
+    url: "http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    dest: "/tmp/epel-release-latest-7.noarch.rpm"
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+
+- name: "[ENTERPRISE-DEMO][CONFIG-JBOSS][JBOSS-SELINUX] Install EPEL Repo - RHEL 7"
+  command: "rpm -ivh /tmp/epel-release-latest-7.noarch.rpm"
+  args:
+    creates: "/etc/yum.repos.d/epel.repo"
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+
+- name: "[ENTERPRISE-DEMO][CONFIG-JBOSS][JBOSS-SELINUX] Install jboss dependencies"
+  yum:
+    name: "{{ item  }}"
+  loop:
+    - libselinux-python
+    - unzip
+

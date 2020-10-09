@@ -1,0 +1,12 @@
+---
+
+- hosts: rhel1
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  become: yes
+  tasks:
+    - name: '[ANSIBLEFEST] Install Ticket Monster in RHEL1'
+      include_role:
+         name: "rhel/deploy-ticketapp"

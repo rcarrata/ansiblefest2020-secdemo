@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Deploy Infra for Checkpoint Gateway'
+      include_role:
+        name: "azure/create-ckp-gw"

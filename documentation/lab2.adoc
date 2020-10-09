@@ -1,0 +1,223 @@
+= Lab2 - Deploying the DevSecOps environment in Azure with Ansible Tower
+
+== 1 - Overview
+
+As we detailed in the previous section, we will work in a cloud native environment: Azure.
+
+We selected Azure, because of the first class integrations with Checkpoint Virtual Appliances and because of the integrations also through Ansible.
+
+The lab started only with one instance of Ansible Tower created and pre-provisioned.
+
+IMPORTANT: In the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor for check these information.
+
+From this Ansible Tower instance will be provisioned the rest of the resources (VMs, Vnets, Disks, etc) in Azure, that are needed for the lab:
+
+=== 1.1 - Goals
+
+* Deploy the infrastructure (VMs, Nics, Vnets, Public IPs, etc) in Azure needed for this lab 
+* Understand how to create resources within Azure through Ansible Tower
+* Access to Windows10 VM with RDP and use Powershell
+* Check connectivity and access to the brand new VMs created
+
+== 2 - Lab Specifications
+
+=== Time to complete the lab (approx)
+
+* 15mins
+
+=== Resources involved
+
+* User Web Browser
+* Ansible Tower Portal
+* Windows10
+* Windows10 Powershell
+
+== 3 - Guide
+
+In the previous lab we had provisioned the objects into Tower from code, that corresponds with the labs 2-5.
+
+But as we commented, beside the Tower VM no other resources are provisioned in Azure. So we need to provision everything. 
+
+Manually its an option. But its repetitive work, and can be some human error with the parameters. So, in fact manually is not the proper option. Automate the deployment as a code is the best option here.
+
+So we will provision our infrastructure from the https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/vars/common.yml#L9[Code] through Ansible playbooks executed in Tower, using some https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/azure[Roles] that we already written and tested for this purpose
+
+++++
+<p align="center">
+  <img width="500" height="500" src="../documentation/images/AnsibleFest2020.png">
+</p>
+++++
+
+Let's execute the Workflow Template and analyse what's happening behind the hood.
+
+* Execute -> Workflow Templates - Lab2_Workflow_deploy_azure_ciberinfra: 
+
+++++
+<p align="center">
+  <img width="400" src="../documentation/images/lab2_4.png">
+</p>
+++++
+
+This execution triggers a Workflow Template job that at the same time executes a workflow with several Job Templates (Ansible Playbooks in essence), that will perform several tasks:
+
+++++
+<p align="center">
+  <img width="600" src="../documentation/images/lab2_2.png">
+</p>
+++++
+
+These are the Job Templates that are triggered automatically, when the Workflow Template is executed ([.underline]**NO execute them again**):
+
+* Lab2_deploy_ckp_gw: Deploy Azure Infrastructure Checkpoint Gateway
+* Lab2_deploy_ckp_sms: Deploy Azure Infrastructure Checkpoint SMS
+* Lab2_deploy_rhel_vm: Deploy Azure Infrastructure RHEL1 and RHEL2
+* Lab2_deploy_win10_vm: Deploy Azure Infrastructure Windows10
+
+++++
+<p align="center">
+  <img width="200" src="../documentation/images/lab2_5.png">
+</p>
+++++
+
+NOTE: to get more information, go click to the DETAILS button in order to open the Job Template that is running (opened in a new tab to maintain the workflow template job logs).
+
+IMPORTANT: Meanwhile is deploying the infra, investigate the DETAILS of the other job templates of this task, and also take a look to the Video Demo in the botton of this page or the code behind that the magic. In less than 6 minutes all the infrastructure is deployed!
+
+Once the Windows10 is deployed properly, you need to connect to the VM of Win10 through RDP. Select the Public IP from the Windows, from the Details Job Template executed in the Workflow:
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_7.png">
+</p>
+++++
+
+
+The parameter connections are the following:
+
+* Server: Public windows IP
+* Username: azureuser
+* Password: << ask your administrator >>
+
+NOTE: **Why do you need Windows10 VM**? Two main reasons here: first of all, we need to connect to the all VMs and resources inside the secured network in the cloud, so the Windows10 is a Jumphost , because the RHEL servers are not public, simulating a real scenario (the apps are behind the firewall and never exposed). On the other hand also we need the Checkpoint SmartConsole installed for connecting to the Checkpoint Security Management Server in order to manage the objects or check the automations. 
+
+Once are inside of the Windows you need to open the Powershell:
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_6.png">
+</p>
+++++
+
+NOTE: You can tweak the Windows RDP in your RDP client for automatically adjust the sizing of your screen and have better experience.
+
+At this point, your VMs are finished (or it be almost ready), so begin to check the PING and SSH.
+
+For obtain the IPs go to the Tower, and check Inventories -> RHEL1 (for example) -> HOST:
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_8.png">
+</p>
+++++
+
+Now click in the hosts and obtain the ansible host IP provisioned.
+
+NOTE: Other way to obtain the IPs is to go to the https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/vars[vars file for your lab] and obtain the IPs, because this lab is all from Infrastructure as Code / GitOps. Fantastic, right?
+
+In the Powershell console and once the Workflow template is finished Successfully let's start the checking:
+
+Check the ping and ssh to TOWER:
+
+```
+C:\Users\azureuser> ping -n 2 "Tower_IP"
+
+C:\Users\azureuser>ssh azureuser@"Tower_IP"
+```
+
+Check the ping and ssh to RHEL1:
+
+```
+C:\Users\azureuser> ping -n 2 "RHEL1_IP"
+
+C:\Users\azureuser>ssh azureuser@"RHEL1_IP"
+```
+
+Check the ping and ssh to RHEL2:
+
+```
+C:\Users\azureuser> ping -n 2 "RHEL2_IP"
+
+C:\Users\azureuser>ssh azureuser@"RHEL2_IP"
+```
+
+
+Check the ping and ssh to Checkpoint SMS:
+
+```
+C:\Users\azureuser> ping -n 2 "CHK_SMS_IP"
+
+C:\Users\azureuser>ssh admin@"CHK_SMS_IP"
+```
+
+Check the ping and ssh to Checkpoint GW:
+
+```
+C:\Users\azureuser>ssh admin@"CHK_GW_IP"
+```
+
+NOTE: Ping in the SMS GW is not allowed, because by default is filtered by security.
+
+In the command line, inside of the Checkpoint_SMS, Checkpoint_GW, Ansible Tower or Windows10 check that effectively you can reach internet through the gateway, and resolve google.com (or whatever webpage you want):
+
+```
+ping www.google.com
+```
+
+In the RHEL1 and RHEL2, check that you can **NOT** perform a ping to internet:
+
+```
+ping 8.8.8.8
+```
+
+IMPORTANT: This is because the RHEL's are deployed in the Subnet App Layer of the lab environment, and this subnet will be secured through the Firewall, and used as a Default gateway as well. You can reach the RHEL from the Windows10 VM, because of the routing of Azure (and because a Security Group is allowing the communication.)
+
+We will see in the next chapters, how to secure the inbound and outbound traffic from our applications.
+
+
+Access with the Windows10 browser, to the Checkpoint GAIA IP Address [ https://"CKP_SMS_IP" ]:
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_9.png">
+</p>
+++++
+
+NOTE: The IP showed in the picture is only orientative. Check your inventory or your vars to obtain your lab IP for the CHKP SMS.
+
+Go to Details and click Go on to the webpage:
+
+NOTE: this is because the certificates when the VM of the Checkpoint are self-generated and the browser does not recognized them.
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_10.png">
+</p>
+++++
+
+And voilà the Checkpoint SMS is online also.
+
+IMPORTANT: Not enter now to the GAIA portal, because we will install the latest update in the next Lab. After we can check the GAIA portal and the SmartConsole for investigate the Checkpoint SMS.
+
+== 4 - Video Demonstration
+
+Click below and you will be redirected to the lab video:
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/cCaQaTEKoY0]
+endif::[]
+
+NOTE: The Azure console won't be provided in the lab preprovisioned.
+
+link:lab3.adoc[Next Section -> Lab 3: Checkpoint Cybersecurity environment automatic configuration]
+
+link:lab1.adoc[Previous Section -> Lab 1 - Integrating Ansible Tower with DevOps and Cloud Tools]

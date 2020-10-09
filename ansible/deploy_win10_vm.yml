@@ -1,0 +1,12 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - vars/common.yml
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Deploy Create Win 10'
+      include_role:
+        name: "azure/create-win10"

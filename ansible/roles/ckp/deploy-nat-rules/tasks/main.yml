@@ -1,0 +1,107 @@
+---
+
+- name: "Add Kubernetes Services"
+  check_point.mgmt.cp_mgmt_service_tcp:
+    name: "Kubernetes_Services"
+    port: 5333
+    state: present
+    color: aquamarine
+    auto_publish_session: yes
+    #protocol: tcp
+    wait_for_task: yes
+
+- name: "Add JBoss Services"
+  check_point.mgmt.cp_mgmt_service_tcp:
+    name: "JBoss_Services"
+    port: 5334
+    state: present
+    color: orchid
+    auto_publish_session: yes
+    #protocol: tcp
+    wait_for_task: yes
+
+- name: "Add Host GW External IP"
+  cp_mgmt_host:
+    color: blue
+    name: "ckp_gw_external_ip"
+    ip_address: "{{ Subnet1StartAddressgw }}"
+    state: present
+    auto_publish_session: yes
+
+- name: "Add JBoss Nat Rule"
+  check_point.mgmt.cp_mgmt_add_nat_rule:
+    comments: "Kubernetes Nat Rule"
+    enabled: true
+    original_destination: ckp_gw_external_ip
+    original_source: Any
+    original_service: JBoss_Services
+    translated_destination: "{{ item.0.vm_name }}"
+    translated_service: HTTP_proxy
+    translated_source: Original
+    method: hide
+    package: "Ansible_Fest_Package"
+    position: bottom
+    #state: present
+  loop:
+    - "{{ rhel }}"
+
+- name: "Add Kubernetes Nat Rule"
+  check_point.mgmt.cp_mgmt_add_nat_rule:
+    comments: "Kubernetes Nat Rule"
+    enabled: true
+    original_destination: ckp_gw_external_ip
+    original_source: Any
+    original_service: Kubernetes_Services
+    translated_destination: "{{ item.1.vm_name }}"
+    translated_service: http
+    translated_source: Original
+    method: hide
+    package: "Ansible_Fest_Package"
+    position: bottom
+    #state: present
+  loop:
+    - "{{ rhel }}"
+
+#- name: "Add Dummy Host"
+#  cp_mgmt_host:
+#    color: red
+#    name: "dummy_host"
+#    ip_address: "192.168.1.1"
+#    state: present
+#    auto_publish_session: yes
+
+#- name:
+#  check_point.mgmt.cp_mgmt_access_section:
+#    layer: "Ansible_Fest_Package Network"
+#    name: "Kubernetes Rules"
+#    position: 3
+#    state: present
+
+- name: "Add Access rule Kubernetes and JBoss"
+  check_point.mgmt.cp_mgmt_access_rule:
+    layer: Ansible_Fest_Package Network
+    name: Application_Access_Rule_Internet
+    source: Any
+    destination:
+     - "{{ vmNamegw }}"
+    service:
+    - Kubernetes_Services
+    - JBoss_Services
+    action: Accept
+    track:
+      type: Log
+    state: present
+    position: 3
+    auto_publish_session: yes
+
+- name: Install Policy Access Control
+  cp_mgmt_install_policy:
+    access: true
+    policy_package: Ansible_Fest_Package
+    threat_prevention: false
+
+- name: Install Policy Threat Prevention
+  cp_mgmt_install_policy:
+    access: false
+    policy_package: Ansible_Fest_Package
+    threat_prevention: true

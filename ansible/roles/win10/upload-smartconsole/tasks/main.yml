@@ -1,0 +1,27 @@
+---
+# tasks file for upload-smartconsole
+
+- name: Create blob container in Azure and upload the Smartconsole
+  azure_rm_storageblob:
+    resource_group: "{{ main_resgroup }}"
+    storage_account_name: "{{ storage_account_name }}"
+    container: "{{ storage_container }}"
+    blob: "{{ win10_ckp_smartconsole }}"
+    src: "files/{{ win10_ckp_smartconsole }}"
+    public_access: container
+    content_type: 'application/image'
+
+- name: Create blob container in Azure and upload the Smartconsole
+  azure_rm_storageblob:
+    resource_group: "{{ main_resgroup }}"
+    storage_account_name: "{{ storage_account_name }}"
+    container: "{{ storage_container }}"
+    blob: "{{ item }}"
+    src: "files/{{ item }}"
+    public_access: container
+    content_type: 'application/image'
+  loop:
+    - vcredist_2010_x86.exe
+    - vcredist_2011_x86.exe
+    - vcredist_2017_x86.exe
+

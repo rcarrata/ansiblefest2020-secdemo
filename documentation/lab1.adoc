@@ -1,0 +1,156 @@
+= Lab1 - Integrating Ansible Tower with DevOps and Cloud Tools
+
+== 1 - Overview
+
+In this lab, we work fully in a cloud native scenario where the only resource preprovisioned is the Ansible Tower VM.
+
+With Red Hat® Ansible® Tower you can centralize and control your IT infrastructure with a visual dashboard, role-based access control, job scheduling, integrated notifications and graphical inventory management. 
+
+++++
+<p align="center">
+  <img src="../documentation/images/tower1.png">
+</p>
+++++
+
+Ansible Tower have a https://docs.ansible.com/ansible-tower/latest/html/userguide/main_menu.html[User Interface] with several objects that can control each part of the elements for the Automation process through Ansible.
+
+Some of these objects are Projects, Inventories, Job Templates, Workflow Templates, Credentials, etc. Each of one serves for an specific purpose to execute and manage the automations, and can be created through the UI.
+
+But, if you want to repeat or control these objects in an automated way? Or just to define this objects as a code for recreate or duplicate your automations in other Ansible Tower instance?
+
+In this Lab1 we will see how to interact with the Tower API, to import and create all of the objects needed for the completion of the lab, defined as a code. 
+
+=== 1.1 - Goals
+
+* Familiarize with Ansible Tower objects such as: Job Templates, Jobs, Credentials, Inventories or Projects (among others)
+* Import your custom lab objects into Ansible Tower for continue the rest of the labs
+* Understand the Activity Streams, and trace the objects that are created in Tower
+* Understand the Infrastructure as Code for the objects of Ansible Tower.
+
+== 2 - Lab Specifications
+
+=== Time to complete the lab (approx)
+
+* 10mins
+
+=== Resources involved
+
+* User Web Browser
+* Ansible Tower Portal
+
+== 3 - Guide
+
+=== 3.1 - First Ansible Tower access and exploration
+
+First access to the Ansible Tower IP in your laptop browser:
+
+```
+https://"TOWER_PUBLIC_IP"
+```
+
+Accept the security advisement from your browser. This is because Tower is generated with the self-signed certificates (this can be substituted by other certs signed by a well-known CA) and your browser doesn't recognize this certificate and outputs this security "issue". Not worry! Its safe :)
+
+Enter the username / password:
+
+```
+username: admin
+password: <<ask to your lab provisioner>>
+```
+
+Your login with admin user, because the Tower system is no binded with any external identity provider.
+
+Once is log in in the Tower UI, take a look around, specially in:
+
+* https://docs.ansible.com/ansible-tower/latest/html/userguide/job_templates.html[Job Templates]
+* https://docs.ansible.com/ansible-tower/latest/html/userguide/inventories.html[Inventories]
+* https://docs.ansible.com/ansible-tower/latest/html/userguide/credentials.html[Credentials]
+* https://docs.ansible.com/ansible-tower/latest/html/userguide/projects.html[Projects]
+
+As you can see in Templates, only a Lab1 object is available, and in the Credentials or Inventories is almost empty... What are the rest of the objects?? 
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab1_3.png">
+</p>
+++++
+
+
+Are defined as https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/vars/common.yml#L132[code]. And through that code we will using the Tower API to create each of one of this objects that are needed to work in this lab.
+
+So, automate the Automation Tool. Imagine the possibilities when you can define all of your objects, as code and added to your version control, release them, tag them, trace them... Isn't useful?
+
+=== 3.2 - Importing AnsibleFest lab Objects in Ansible Tower
+
+From Templates, execute the ```Lab1_config_tower_objects``` from the rocket icon.
+
+++++
+<p align="center">
+  <img src="../documentation/images/lab1_4.png">
+</p>
+++++
+
+
+This will execute an Job Template, that will import the variables needed from the code that we described before to create the objects, the inventory where will be executed, and the credentials that will be used.
+
+Therefore a https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/configure_tower.yml[playbook] will execute https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/tower[some roles] to configure the objects of the Tower:
+
+++++
+<p align="center">
+  <img width="800" src="../documentation/images/lab1_1.png">
+</p>
+++++
+
+Check that this are executing some automations through Ansible playbooks, but what are exactly doing?
+
+Meanwhile the job is running, duplicate your Ansible Tower tab (or click with the central button of your mouse in one of the object in the left panel) in your browser and check again the credentials, templates, inventories and projects. 
+
+Now are created more elements!
+
+Click to the Dashboard button, and click in the upper right corner the activity stream icon:
+
+++++
+<p align="center">
+  <img  src="../documentation/images/lab1_2.png">
+</p>
+++++
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab1_6.png">
+</p>
+++++
+
+Check that the objects has been created properly through the API to the system without manual intervention, and now you're ready to go to the next level of the lab: Create the resources environment in Azure.
+
+++++
+<p align="center">
+  <img width="400" src="../documentation/images/lab1_5.png">
+</p>
+++++
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab1_7.png">
+</p>
+++++
+
+But before you leave, check that the job is finished properly! Go to Jobs, and check the latest job that you launched. Once is done, go to the next level!
+
+++++
+<p align="center">
+  <img width="400" src="../documentation/images/lab1_8.png">
+</p>
+++++
+
+== 4 - Video Demonstration
+
+Click below and you will be redirected to the lab video:
+
+ifdef::env-github[]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/E6fCeUOWxsI]
+endif::[]
+
+link:lab2.adoc[Next Section -> Lab 2: Deploying the DevSecOps environment in Azure with Ansible Tower]
+
+link:lab0.adoc[Previous Section -> Lab0 - Lab Overview & Prerequisites]
+

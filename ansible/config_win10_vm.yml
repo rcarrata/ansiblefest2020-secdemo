@@ -1,0 +1,21 @@
+---
+
+- hosts: w10
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  become_method: runas
+  vars:
+    # TODO: Put vars in specific win10 inventory
+    ansible_ssh_user: "{{ win10_username }}"
+    ansible_ssh_pass: "{{ password }}"
+    ansible_become_password: "{{ password }}"
+    ansible_connection: "winrm"
+    ansible_winrm_server_cert_validation: ignore
+    ansible_ssh_port: 5986
+  tasks:
+    - name: '[ANSIBLEFEST] Install SmartConsole in Win10'
+      include_role:
+        name: "win10/install-smartconsole"
+

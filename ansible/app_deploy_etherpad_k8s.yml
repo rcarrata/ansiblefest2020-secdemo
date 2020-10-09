@@ -1,0 +1,12 @@
+---
+
+- hosts: rhel2
+  become: yes
+  vars_files:
+    - vars/common.yml
+    - vault/vault.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Install Etherpad in RHEL2'
+      include_role:
+        name: "rhel/deploy-etherpad"

@@ -1,0 +1,12 @@
+---
+
+- hosts: rhel2
+  become: yes
+  vars_files:
+    - vault/vault.yml
+    - vars/common.yml
+    - "vars/{{ lab_name }}.yml"
+  tasks:
+    - name: '[ANSIBLEFEST] Install Kubernetes in RHEl2'
+      include_role:
+        name: "rhel/install-k8s"
