@@ -181,7 +181,7 @@ NOTE: This is the most delicated part in the whole scenario, so if you have any 
 * Video Demo:
 
 ifdef::env-github[]
-image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/uDuKme5XSKA]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/SSeLRGCulTE]
 endif::[]
 
 === 3.7 - Check Checkpoint SMS though SmartConsole and GAIA.
