@@ -217,11 +217,9 @@ Password: <password_for_checkpoint>>
 
 Once you are logged in you will have access to the GAIA portal.
 
-
-
 NOTE: In this portal we will check some parameters of OS from Checkpoint SMS, but if you need to to manage the Policies, Rules, etc, you need to have installed the SmartConsole in order  (like the VMware "heavy" client).
 
-IMPORTANT: After you finished, you need to exit the session in order to not lock down the same when the SmartConsole is opened.
+IMPORTANT: After you finished, **you need to exit the session** in order to not lock down the same when the SmartConsole is opened.
 
 ++++
 <p align="center">
