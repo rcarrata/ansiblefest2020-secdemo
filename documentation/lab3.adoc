@@ -178,18 +178,10 @@ NOTE: This is the most delicated part in the whole scenario, so if you have any 
 
 ==== 3.6 Video Demonstration - Install & Update Checkpoint Jumbo Hotfix and Enable API
 
-* Part 1
+* Video Demo:
 
 ifdef::env-github[]
-image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/QHhklwwOoHQ]
-endif::[]
-
-This is the first part of the video where we executed the workflow template. We edited the video and splitted in two in order to avoid minutes waiting the installation of the package that adds no value to the lab neither the demo.
-
-* Part 2
-
-ifdef::env-github[]
-image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/2XxwvyfEbX4]
+image:https://static.thenounproject.com/png/196806-200.png[link=https://youtu.be/uDuKme5XSKA]
 endif::[]
 
 === 3.7 - Check Checkpoint SMS though SmartConsole and GAIA.
