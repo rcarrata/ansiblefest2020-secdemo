@@ -1,4 +1,4 @@
-= Lab0 - Lab Overview & Prerequisites
+= Lab TSHOOT - Troubleshooting and solve common problems
 
 == 1 - Overview
 
