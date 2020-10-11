@@ -6,9 +6,9 @@ As we detailed in the previous section, we will work in a cloud native environme
 
 We selected Azure, because of the first class integrations with Checkpoint Virtual Appliances and because of the integrations also through Ansible.
 
-The lab started only with one instance of Ansible Tower created and pre-provisioned.
+The lab started with only one instance of Ansible Tower created and pre-provisioned.
 
-IMPORTANT: In the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor for check these information.
+IMPORTANT: In the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor to check this information.
 
 From this Ansible Tower instance will be provisioned the rest of the resources (VMs, Vnets, Disks, etc) in Azure, that are needed for the lab:
 
@@ -38,7 +38,7 @@ In the previous lab we had provisioned the objects into Tower from code, that co
 
 But as we commented, beside the Tower VM no other resources are provisioned in Azure. So we need to provision everything. 
 
-Manually its an option. But its repetitive work, and can be some human error with the parameters. So, in fact manually is not the proper option. Automate the deployment as a code is the best option here.
+Manually it's an option. But it's repetitive work, and can be some human error with the parameters. So, in fact manually is not the proper option. Automating the deployment as a code is the best option here.
 
 So we will provision our infrastructure from the https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/vars/common.yml#L9[Code] through Ansible playbooks executed in Tower, using some https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/azure[Roles] that we already written and tested for this purpose
 
@@ -110,7 +110,7 @@ Once are inside of the Windows you need to open the Powershell:
 
 NOTE: You can tweak the Windows RDP in your RDP client for automatically adjust the sizing of your screen and have better experience.
 
-At this point, your VMs are finished (or it be almost ready), so begin to check the PING and SSH.
+At this point, your VMs are finished (or it will be almost ready), so begin to check the PING and SSH.
 
 For obtain the IPs go to the Tower, and check Inventories -> RHEL1 (for example) -> HOST:
 
@@ -120,7 +120,7 @@ For obtain the IPs go to the Tower, and check Inventories -> RHEL1 (for example)
 </p>
 ++++
 
-Now click in the hosts and obtain the ansible host IP provisioned.
+Now click on the hosts and obtain the ansible host IP provisioned.
 
 NOTE: Other way to obtain the IPs is to go to the https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/vars[vars file for your lab] and obtain the IPs, because this lab is all from Infrastructure as Code / GitOps. Fantastic, right?
 
@@ -196,7 +196,7 @@ NOTE: The IP showed in the picture is only orientative. Check your inventory or 
 
 Go to Details and click Go on to the webpage:
 
-NOTE: this is because the certificates when the VM of the Checkpoint are self-generated and the browser does not recognized them.
+NOTE: this is because the certificates when the VM of the Checkpoint are self-generated and the browser does not recognize them.
 
 ++++
 <p align="center">
@@ -206,7 +206,7 @@ NOTE: this is because the certificates when the VM of the Checkpoint are self-ge
 
 And voilà the Checkpoint SMS is online also.
 
-IMPORTANT: Not enter now to the GAIA portal, because we will install the latest update in the next Lab. After we can check the GAIA portal and the SmartConsole for investigate the Checkpoint SMS.
+IMPORTANT: Not enter now to the GAIA portal, because we will install the latest update in the next Lab. Afterwards we can check the GAIA portal and the SmartConsole to investigate the Checkpoint SMS.
 
 == 4 - Video Demonstration
 
