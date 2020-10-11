@@ -16,7 +16,7 @@ Repository for the AnsibleFest 2020 lab - Automate Cybersecurity solutions in a 
 
 == Lab Overview
 
-In this hands-on lab, we will cover the comprehensive Cibersecurity capabilities available in Red Hat Ansible Tower and Checkpoint Threat Prevention Systems. You will gain experience with:
+In this hands-on lab, we will cover the comprehensive Cybersecurity capabilities available in Red Hat Ansible Tower and Checkpoint Threat Prevention Systems. You will gain experience with:
 
 * Hands on with Ansible Tower and how to integrate them through cloud native environments as Microsoft Azure
 
@@ -40,7 +40,7 @@ In this hands-on lab, we will cover the comprehensive Cibersecurity capabilities
 
 The entire lab environment is hosted online and includes Red Hat Ansible Tower^(R)^, Red Hat Enterprise Linux^(R)^, Checkpoint^(R)^ Security Management Virtual Appliances, Checkpoint^(R)^ Security Gateway, Microsoft^(R)^ Windows, Microsoft Azure^(R)^, Red Hat^(R)^ JBoss Web Server and Kubernetes^(R)^.
 
-The lab could be pre-hosted, or you can deploy your own flavor for your own tests (check documentation/prelab.doc[prelab.doc] in the documentation).
+The lab could be pre-hosted, or you can deploy your own flavor for your own tests (check link::documentation/prelab.doc[prelab.doc] in the documentation).
 
 == Table of Contents
 
@@ -56,4 +56,4 @@ The lab could be pre-hosted, or you can deploy your own flavor for your own test
 
 == Special Thanks
 
-Special thanks to Germán Montalvo and Cesar Martinez among others, for their support and help during the creation and testing of this lab.
+Special thanks to Germán Montalvo, Cesar Martinez and Nacho Sanchez among others, for their support and help during the testing of this lab.

@@ -14,9 +14,9 @@ With Red Hat® Ansible® Tower you can centralize and control your IT infrastruc
 
 Ansible Tower have a https://docs.ansible.com/ansible-tower/latest/html/userguide/main_menu.html[User Interface] with several objects that can control each part of the elements for the Automation process through Ansible.
 
-Some of these objects are Projects, Inventories, Job Templates, Workflow Templates, Credentials, etc. Each of one serves for an specific purpose to execute and manage the automations, and can be created through the UI.
+Some of these objects are Projects, Inventories, Job Templates, Workflow Templates, Credentials, etc. Each of one serves a specific purpose to execute and manage the automations, and can be created through the UI.
 
-But, if you want to repeat or control these objects in an automated way? Or just to define this objects as a code for recreate or duplicate your automations in other Ansible Tower instance?
+But, if you want to repeat or control these objects in an automated way? Or just to define this object as a code for recreate or duplicate your automations in other Ansible Tower instances?
 
 In this Lab1 we will see how to interact with the Tower API, to import and create all of the objects needed for the completion of the lab, defined as a code. 
 
@@ -48,7 +48,8 @@ First access to the Ansible Tower IP in your laptop browser:
 https://"TOWER_PUBLIC_IP"
 ```
 
-Accept the security advisement from your browser. This is because Tower is generated with the self-signed certificates (this can be substituted by other certs signed by a well-known CA) and your browser doesn't recognize this certificate and outputs this security "issue". Not worry! Its safe :)
+Accept the security advice from your browser. This is because Tower is generated with the self-signed certificates (this can be substituted by other certs signed by a well-known CA) and your browser doesn't recognize this certificate and outputs this security "issue". Don't worry! It's safe :)
+
 
 Enter the username / password:
 
@@ -57,7 +58,7 @@ username: admin
 password: <<ask to your lab provisioner>>
 ```
 
-Your login with admin user, because the Tower system is no binded with any external identity provider.
+Your login with the admin user, because the Tower system is not binded with any external identity provider.
 
 Once is log in in the Tower UI, take a look around, specially in:
 
@@ -75,9 +76,9 @@ As you can see in Templates, only a Lab1 object is available, and in the Credent
 ++++
 
 
-Are defined as https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/vars/common.yml#L132[code]. And through that code we will using the Tower API to create each of one of this objects that are needed to work in this lab.
+Are defined as https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/vars/common.yml#L132[code]. And through that code we will use the Tower API to create each of one of the objects that are needed to work in this lab.
 
-So, automate the Automation Tool. Imagine the possibilities when you can define all of your objects, as code and added to your version control, release them, tag them, trace them... Isn't useful?
+So, automate the Automation Tool. Imagine the possibilities when you can define all of your objects, as code and added to your version control, release them, tag them, trace them... Isn't it useful?
 
 === 3.2 - Importing AnsibleFest lab Objects in Ansible Tower
 
@@ -90,7 +91,7 @@ From Templates, execute the ```Lab1_config_tower_objects``` from the rocket icon
 ++++
 
 
-This will execute an Job Template, that will import the variables needed from the code that we described before to create the objects, the inventory where will be executed, and the credentials that will be used.
+This will execute a Job Template, that will import the variables needed from the code that we described before to create the objects, the inventory where will be executed, and the credentials that will be used.
 
 Therefore a https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansible/configure_tower.yml[playbook] will execute https://github.com/rcarrata/ansiblefest2020-secdemo/tree/master/ansible/roles/tower[some roles] to configure the objects of the Tower:
 
@@ -100,11 +101,11 @@ Therefore a https://github.com/rcarrata/ansiblefest2020-secdemo/blob/master/ansi
 </p>
 ++++
 
-Check that this are executing some automations through Ansible playbooks, but what are exactly doing?
+Check that these are executing some automations through Ansible playbooks, but what are exactly doing?
 
-Meanwhile the job is running, duplicate your Ansible Tower tab (or click with the central button of your mouse in one of the object in the left panel) in your browser and check again the credentials, templates, inventories and projects. 
+Meanwhile the job is running, duplicate your Ansible Tower tab (or click with the central button of your mouse in one of the objects in the left panel) in your browser and check again the credentials, templates, inventories and projects. 
 
-Now are created more elements!
+Now there are more elements created!
 
 Click to the Dashboard button, and click in the upper right corner the activity stream icon:
 
@@ -120,7 +121,7 @@ Click to the Dashboard button, and click in the upper right corner the activity 
 </p>
 ++++
 
-Check that the objects has been created properly through the API to the system without manual intervention, and now you're ready to go to the next level of the lab: Create the resources environment in Azure.
+Check that the objects have been created properly through the API to the system without manual intervention, and now you're ready to go to the next level of the lab: Create the resources environment in Azure.
 
 ++++
 <p align="center">
@@ -134,7 +135,7 @@ Check that the objects has been created properly through the API to the system w
 </p>
 ++++
 
-But before you leave, check that the job is finished properly! Go to Jobs, and check the latest job that you launched. Once is done, go to the next level!
+But before you leave, check that the job is finished properly! Go to Jobs, and check the latest job that you launched. Once it is done, go to the next level!
 
 ++++
 <p align="center">

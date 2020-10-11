@@ -44,7 +44,7 @@ The following diagram shows the high level diagram of the infrastructure in Azur
 
 There are several components but the most important are:
 
-* DevSecOps Engineer Laptop - Your laptop where you will connect to this services.
+* DevSecOps Engineer Laptop - Your laptop where you will connect to this service.
 * https://www.ansible.com/products/tower[Red Hat Ansible Tower] [Public IP] - Where all the automations & all the magic will be happening.
 * Windows 10 [Public IP] - Internal Windows used to perform the several labs in this repo. All VMs and services will be reachable from here.
 * RHEL1 [Private IP]: Red Hat Linux Enterprise VM where a JBoss Server will be deployed and the Ticket Monster app will be deployed in this JBoss
@@ -54,11 +54,11 @@ There are several components but the most important are:
 
 Remember that only **Ansible Tower** will be pre-provisioned. The rest of the elements will be provisioned as you are progressing in the labs.
 
-== 4. Where I start?
+== 4. Where do I start?
 
-You will have access to **only one thing** in the this step: Ansible Tower. 
+You will have access to **only one thing** in this step: Ansible Tower. 
 
-NOTE: in the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor for check these information.
+NOTE: in the provisioned lab mode, the IP of the Tower and the Lab Number will be provided. Ask your instructor to check this information.
 
 From here you will deploy on your own, and in real time the whole rest of the lab. So, go to the next chapter in order to know more details about the lab!
 
