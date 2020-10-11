@@ -254,4 +254,4 @@ endif::[]
 
 link:lab5.adoc[Next Section -> Lab 5: Application Hardening with Checkpoint Firewall and NAT Rules fully automated]
 
-link:lab3.adoc[Previous Section -> Lab3 - Checkpoint Cibersecurity environment automatic configuration]
+link:lab3.adoc[Previous Section -> Lab3 - Checkpoint Cybersecurity environment automatic configuration]

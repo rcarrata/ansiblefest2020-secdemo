@@ -2,13 +2,13 @@
 
 == 1 - Overview
 
-Now we that we have deployed our apps, and secured through Checkpoint SMS & GW with policies & rules we are secure because we can control the traffic that is origined inside of our subnets in our Azure scenario. 
+Now we have deployed our apps, and secured through Checkpoint SMS & GW with policies & rules we are secure because we can control the traffic that originates inside of our subnets in our Azure scenario.
 
-But... wait! How about the inbound traffic? How can my users access to my applications, in a secure and monitored way?
+But... wait! How about the inbound traffic? How can my users access my applications, in a secure and monitored way?
 
-We will use the Checkpoint Gateway to expose our Nat Rules, and with a NAT we will control and expose specific ports to redirect our users through the Gateway and with destination of our RHEL apps.
+We will use the Checkpoint Gateway to expose our Nat Rules, and with a NAT we will control and expose specific ports to redirect our users through the Gateway and with the destination of our RHEL apps.
 
-In this way, we not only control our ports or the apps, also we can filter, monitor and control everything that is trying to access to our services & applications.
+In this way, we not only control our ports or the apps, also we can filter, monitor and control everything that is trying to access our services & applications.
 
 === 1.1 - Goals
 
@@ -32,11 +32,12 @@ In this way, we not only control our ports or the apps, also we can filter, moni
 
 == 3 - Guide
 
-Once the applications are deployed in the RHELs, and we have secured the outbound and internal traffic with the Checkpoint Policies and Rules, it's time to expose them through Checkpoint Gateway that will act (amont multiple other things) as a Firewall and one IP for the entry point for our apps, exposing several services & apps.
+Once the applications are deployed in the RHELs, and we have secured the outbound and internal traffic with the Checkpoint Policies and Rules, it's time to expose them through Checkpoint Gateway that will act (among multiple other things) as a Firewall and one IP for the entry point for our apps, exposing several services & apps.
 
-First we will automatically deploy the new services that correspond with our Services (Kubernetes & Jboss), after create an object for the Checkpoint GW. After that we will create the Hide NAT Rule to expose our two services from the Gateway. And finally for we will create a Access Rule for allow the traffic through the 
+First we will automatically deploy the new services that correspond with our Services (Kubernetes & Jboss), after creating an object for the Checkpoint GW. After that we will create the Hide NAT Rule to expose our two services from the Gateway. And finally for we will create a Access Rule for allow the traffic through the
 
-And finally we need to check our services exposed to Internet through the Checkpoint GW. 
+And finally we need to check our services exposed to the Internet through the Checkpoint GW.
+
 
 === 3.1 - Deploy Policies in Checkpoint
 
@@ -135,7 +136,7 @@ But first of all, obtain your Checkpoint Public IP, that is available in Tower i
 </p>
 ++++
 
-And click in the second task (where changed: [localhost] is outputed in yellow color). Opened for obtain the Public IP:
+And click on the second task (where changed: [localhost] is outputted in yellow color). Opened for obtain the Public IP:
 
 ++++
 <p align="center">
@@ -171,7 +172,7 @@ publicIP:5334
 </p>
 ++++
 
-You can now check the inbound access to our applications, because is all monitored in our Checkpoint Secure Gateway. Go to the SmartConsole and to the Security Policy and select the Rule deployed **Application_Access_Rule_Internet** in the 3r position. Below in Logs, select the timeline and put it in Last Hour and see the inbound connections:
+You can now check the inbound access to our applications, because it is all monitored in our Checkpoint Secure Gateway. Go to the SmartConsole and to the Security Policy and select the Rule deployed **Application_Access_Rule_Internet** in the 3r position. Below in Logs, select the timeline and put it in Last Hour and see the inbound connections:
 
 ++++
 <p align="center">
@@ -205,7 +206,7 @@ endif::[]
 
 Thanks for complete this lab! 
 
-Hope that you enjoyed as much as we enjoyed creating and testing this. Remember that this built from scratch so any improvement and additional labs are very welcome! 
+Hope that you enjoyed as much as we enjoyed creating and testing this. Remember that this was built from scratch so any improvement and additional labs are very welcome!
 
 Pull requests and Issues are very welcome!
 
