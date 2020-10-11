@@ -4,7 +4,7 @@
 
 In the previous section, we deployed our lab infrastructure environment, but is deployed by default, no customizations neither updates or installation of packages are performed in the systems deployed.
 
-In this point of the lab, we have already deployed two RHELs (for our apps), a Windows10 for connect to our environment, and the two Checkpoints (SMS and GW).
+In this point of the lab, we have already deployed two RHELs (for our apps), a Windows10 for connecting to our environment, and the two Checkpoints (SMS and GW).
 
 Now it's time to configure the Checkpoint environments in order to update their systems to the latest security package and enable the API to interact through Ansible and also with Checkpoint SmartConsole (that will be installed with Ansible also to the Windows10 system).
 
@@ -46,9 +46,9 @@ For Ansible to communicate to a Windows host and use Windows modules, the Window
 
 * A WinRM listener should be created and activated. More details for this can be found below.
 
-We accomplished the first two requirements (Windows10 and Powershell3.0 + .Net4.0), but we need to enable the WinRM to be able to manage through Ansible the Windows VM.
+We accomplished the first two requirements (Windows10 and Powershell3.0 + .Net4.0), but we need to enable WinRM to be able to manage through Ansible the Windows VM.
 
-To do this task we can install automatically an script that installs an enables this. This is well documented in the https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html#winrm-setup[Enable WinRM in Ansible for Windows Documentation].
+To do this task we can install automatically a script that installs and enables this. This is well documented in the https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html#winrm-setup[Enable WinRM in Ansible for Windows Documentation].
 
 So for enable this, inside of the Windows 10 (connected by RDP), copy and paste this in a Powershell shell:
 
@@ -66,7 +66,7 @@ At Set-Execution Policy RemoteSigned you need to press Enter to launched that co
 
 Press [Y] word to accept the https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7[Set-Execution Policy RemoteSigned] to enable the remote execution of Scripts.
 
-NOTE: This is the only manual step in the whole lab, and its because Azure have some security limitations in order to enable by default the WinRM, to avoid security flaws. 
+NOTE: This is the only manual step in the whole lab, and it's because Azure has some security limitations in order to enable by default the WinRM, to avoid security flaws.
 
 ++++
 <p align="center">
@@ -79,7 +79,7 @@ And that's it for the configuration of the WinRM. Now we can execute all the aut
 
 === 3.3 - Config Win10 - Putty + SmartConsole
 
-We need some additional packages for accomplished this scenario, and we could installed by hand. But this is boring, no? Why not you add this required software in an automated way with Ansible?
+We need some additional packages for accomplishing this scenario, and we could install by hand. But this is boring, no? Why not add this required software in an automated way with Ansible?
 
 Let's do it!
 
@@ -145,7 +145,7 @@ endif::[]
 
 Now that we have the configured software packages in our Windows10, and we're able to connect to the checkpoint systems.
 
-But first we need to download and install the Jumbo Hotfix Accumulator and enable the API for be able to use the latest modules from Ansible (executed in Ansible Tower).
+But first we need to download and install the Jumbo Hotfix Accumulator and enable the API to be able to use the latest modules from Ansible (executed in Ansible Tower).
 
 https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk153152[Jumbo Hotfix Accumulator] is an accumulation of stability and quality fixes resolving multiple issues in different products. This Incremental Hotfix and this article are periodically updated with new fixes.
 
@@ -174,7 +174,7 @@ The image below is the two Job Templates that will be executed.
 
 IMPORTANT: The Config Jumbo Hotfix takes some time (18mins approx), so its perfect time to grab a coffee and take a small break, or review the video demo below. Check the logs of the Ansible Tower also in order to review the progress (the Check Status of the API is always slowly in non baremetal environments)
 
-NOTE: This is the most delicated part in the whole scenario, so if you have any issue / timeout, please contact with the administrator of the lab.
+We need some additional packages for accomplishing this scenario, and we could install by hand. But this is boring, no? Why not add this required software in an automated way with Ansible?
 
 ==== 3.6 Video Demonstration - Install & Update Checkpoint Jumbo Hotfix and Enable API
 
@@ -315,7 +315,7 @@ Check that in the SmartConsole, in the Gateway & Servers section that the Checkp
 
 NOTE: not worry for the Status with the icon of a Warning, because these are using trial licenses.
 
-Click it, and pop up the new dialog to show that the Secure Internal Communication have "Trust Established" in the box. This is because the link between Checkpoint SMS and the GW have established correctly a secure communication between them.
+Click it, and pop up the new dialog to show that the Secure Internal Communication have "Trust Established" in the box. This is because the link between Checkpoint SMS and the GW has established correctly a secure communication between them.
 
 ++++
 <p align="center">
@@ -323,7 +323,7 @@ Click it, and pop up the new dialog to show that the Secure Internal Communicati
 </p>
 ++++
 
-Now we have all the Checkpoint systems up & running, and everything is ready to work automating and securying our applications.
+Now we have all the Checkpoint systems up & running, and everything is ready to work automating and securing our applications.
 
 === 3.9 Video Demo
 

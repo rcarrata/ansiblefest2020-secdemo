@@ -6,13 +6,13 @@ Once we have the Checkpoint Secure Management Server, and the Checkpoint Secure 
 
 We will use for our applications 2 different approaches: one server (RHEL1) will be more traditional application server such as https://www.redhat.com/es/technologies/jboss-middleware/web-server[JBoss Server] and the other will be a brand new https://kubernetes.io/[Kubernetes]. 
 
-On top of the Jboss will be deployed a example application, https://github.com/etsauer/ticket-monster-openshift[Ticket Monster]. On the other hand, on top of Kubernetes cluster, a cloud native application will be deployed: https://etherpad.org/[Etherpad].
+On top of the Jboss will be deployed an example application, https://github.com/etsauer/ticket-monster-openshift[Ticket Monster]. On the other hand, on top of Kubernetes cluster, a cloud native application will be deployed: https://etherpad.org/[Etherpad].
 
 After that we will deploy route tables in Azure for route all the default traffic from our apps, through the Checkpoint Secure Gateway, and secure ALL the inbound and outbound traffic with rules and policies.
 
-These rules and policies, will be automatically applied from Tower to the Checkpoint SMS, enabling some traffic and some ports/services and securying and hardening our network and apps.
+These rules and policies will be automatically applied from Tower to the Checkpoint SMS, enabling some traffic and some ports/services and securing and hardening our network and apps.
 
-Finally we will check that our RHEL servers can exit to Internet, because of this rules & policies.
+Finally we will check that our RHEL servers can exit to the Internet, because of these rules & policies.
 
 === 1.1 - Goals
 
@@ -37,9 +37,13 @@ Finally we will check that our RHEL servers can exit to Internet, because of thi
 
 == 3 - Step by Step Guide
 
-First of all we will deploy Jboss server and Kubernetes in each RHEL, and furthermore we will deploy our example apps. After that we will deploy a rules & policies automatically from Tower that will be configured in the Checkpoint SMS & GW. We will add the route table in order to redirect all Application Layer traffic through the Checkpoint GW. Finally, we will check that we can control the specific traffic with the SmartConsole and Checkpoint.
+First of all we will deploy Jboss server and Kubernetes in each RHEL, and furthermore we will deploy our example apps. 
 
-=== 3.1 - Deploy Aplications into the RHEL systems
+After that we will deploy rules & policies automatically from Tower that will be configured in the Checkpoint SMS & GW. We will add the route table in order to redirect all Application Layer traffic through the Checkpoint GW. 
+
+Finally, we will check that we can control the specific traffic with the SmartConsole and Checkpoint.
+
+=== 3.1 - Deploy Applications into the RHEL systems
 
 First of all we need to deploy the Jboss into RHEL1 and the Kubernetes in the RHEL2. After that we will deploy our apps on top of each of them.
 
@@ -135,7 +139,7 @@ Check the high level architecture again:
 </p>
 ++++
 
-If you check where the RHELs are deployed, you noticed that are in DMZ Subnet. We want to all the traffic from the DMZ Subnet will be routed through the Checkpoint Gateway and after that redirected to Internet.
+If you check where the RHELs are deployed, you notice that they are in DMZ Subnet. We want all the traffic from the DMZ Subnet to be routed through the Checkpoint Gateway and after that redirected to the Internet.
 
 In Azure this is accomplished using a Azure Route Table that will route all the traffic from the subnet in DMZ, to the Appliance the Checkpoint SMS.
 
@@ -207,7 +211,7 @@ The job templates are:
 </p>
 ++++
 
-Meanwhile are deployed, go to the Windows and SmartConsole and check that we are automatically creating the access rules, policies and nat rules in the Checkpoint SMS. 
+Meanwhile, go to the Windows and SmartConsole and check that we are automatically creating the access rules, policies and nat rules in the Checkpoint SMS.
 
 Select the Security Policies and with the "+" button select the Ansible_Fest_Package Policy recently created:
 
@@ -235,7 +239,7 @@ Inside of a RHEL VM (connect with Powershell or Putty), execute a Curl or a Ping
 
 It works!!! 
 
-IMPORTANT: What's happened? When a Curl / Ping is executed, the route table is redirecting the traffic through the Checkpoint Gateway. This Gateway have rules & policies applied from the Checkpoint SMS, that allows the curl and icmp services/protocols (check the Outgoing 5 rule in the image).
+IMPORTANT: What's happened? When a Curl / Ping is executed, the route table is redirecting the traffic through the Checkpoint Gateway. This Gateway has rules & policies applied from the Checkpoint SMS, that allows the curl and icmp services/protocols (check the Outgoing 5 rule in the image).
 
 So, now our RHEL servers are secured and hardened thanks to Ansible Automation & Checkpoint Servers! Magnificent!
 
