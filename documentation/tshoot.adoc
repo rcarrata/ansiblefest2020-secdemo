@@ -14,7 +14,7 @@ Ansible Tower allows you to try to repeat the job template that failed with the 
 
 ++++
 <p align="center">
-  <img width="500" height="500" src="../documentation/images/lab7_1.png">
+  <img width="500" src="../documentation/images/lab7_1.png">
 </p>
 ++++
 
