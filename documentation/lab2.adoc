@@ -83,6 +83,16 @@ NOTE: to get more information, go click to the DETAILS button in order to open t
 
 IMPORTANT: Meanwhile is deploying the infra, investigate the DETAILS of the other job templates of this task, and also take a look to the Video Demo in the botton of this page or the code behind that the magic. In less than 6 minutes all the infrastructure is deployed!
 
+The Azure Network Diagram from Tower, RHELs and Win10 is represented in the following picture:
+
+++++
+<p align="center">
+  <img width="700" src="../documentation/images/lab1_9.png">
+</p>
+++++
+
+NOTE: The Checkpoint GW & SMS have another separated resource group because of the deployment template type, and are not showed here, but its based on the same resources (NIcs, VMs, NSGs, and PublicIPs).
+
 Once the Windows10 is deployed properly, you need to connect to the VM of Win10 through RDP. Select the Public IP from the Windows, from the Details Job Template executed in the Workflow:
 
 ++++
