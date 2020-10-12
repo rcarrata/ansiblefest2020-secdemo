@@ -313,7 +313,7 @@ Check that in the SmartConsole, in the Gateway & Servers section that the Checkp
 </p>
 ++++
 
-NOTE: not worry for the Status with the icon of a Warning, because these are using trial licenses.
+NOTE: Don't worry for the Status with the icon of a Warning, because these are using trial licenses.
 
 Click it, and pop up the new dialog to show that the Secure Internal Communication have "Trust Established" in the box. This is because the link between Checkpoint SMS and the GW has established correctly a secure communication between them.
 

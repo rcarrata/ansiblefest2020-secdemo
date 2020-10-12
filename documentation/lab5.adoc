@@ -144,7 +144,7 @@ And click on the second task (where changed: [localhost] is outputted in yellow 
 </p>
 ++++
 
-NOTE: remember that this is only orientative. Your public ip will not be the same as shown in the pic before.
+NOTE: remember that this is only orientative. Your public ip won't be the same as shown in the pic before.
 
 Open a browser in your laptop (outside of Windows10 VM) and check your Kubernetes and Etherpad services exposed through the Checkpoint Gateway: 
 
