@@ -125,7 +125,7 @@ For Remmina you need to specify the Server, Username and Password:
 </p>
 ++++
 
-NOTE: **Why do you need Windows10 VM**? Two main reasons here: first of all, we need to connect to the all VMs and resources inside the secured network in the cloud, so the Windows10 is a Jumphost , because the RHEL servers are not public, simulating a real scenario (the apps are behind the firewall and never exposed). On the other hand also we need the Checkpoint SmartConsole installed for connecting to the Checkpoint Security Management Server in order to manage the objects or check the automations. 
+NOTE: **Why do you need Windows10 VM**? Two main reasons here: first of all, we need to connect to all VMs and resources inside the secured network in the cloud. So in this case, the VM of Windows10 is a Jumphost, because the RHEL servers are not public, simulating a real scenario (the apps are behind the firewall and never exposed). On the other hand also we need the Checkpoint SmartConsole installed for connecting to the Checkpoint Security Management Server in order to manage the objects or check the automations. 
 
 Once are inside of the Windows you need to open the Powershell:
 
