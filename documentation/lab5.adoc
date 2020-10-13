@@ -87,17 +87,11 @@ The rules are composed for:
 
 * Original Destination: ckp_gw_external (in the right bar in the search object, search in the Network Objects -> Networks -> Hosts)
 
-++++
-<p align="center">
-  <img width="200" src="../documentation/images/lab5_5.png">
-</p>
-++++
-
 * Original Services: (Go to Services -> TCP and search for Kubernetes and JBoss services):
 
 ++++
 <p align="center">
-  <img width="200" src="../documentation/images/lab5_6.png">
+  <img width="600" src="../documentation/images/lab5_13_1.png">
 </p>
 ++++
 
@@ -109,7 +103,7 @@ This objects exposes the Kubernetes service in the Port **5333** and the JBoss i
 
 ++++
 <p align="center">
-  <img width="300" src="../documentation/images/lab5_13.png">
+  <img width="600" src="../documentation/images/lab5_13.png">
 </p>
 ++++
 
@@ -136,7 +130,16 @@ But first of all, obtain your Checkpoint Public IP, that is available in Tower i
 </p>
 ++++
 
-And click on the second task (where changed: [localhost] is outputted in yellow color). Opened for obtain the Public IP:
+And click on the second task (where changed: [localhost] is outputted in yellow color). 
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab5_18.png">
+</p>
+++++
+
+
+Opened for obtain the Public IP:
 
 ++++
 <p align="center">

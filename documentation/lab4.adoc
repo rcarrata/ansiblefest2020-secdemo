@@ -129,7 +129,7 @@ endif::[]
 
 Now that we have deployed the applications in the RHEL servers, we need to route all the inbound and outbound traffic to/from Internet.
 
-NOTE: If you remember en in lab2 when we deployed the RHEL servers, they cannot exit to Internet, because we were deployed in the App Layer. This is because we want to securize our apps and control to where is connected or will be acceded by. 
+NOTE: If you remember in lab2 when we deployed the RHEL servers, they cannot exit to Internet, because we were deployed in the App Layer. This is because we want to securize our apps and control to where is connected or will be acceded by. 
 
 Check the high level architecture again:
 

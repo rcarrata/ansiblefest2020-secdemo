@@ -56,4 +56,4 @@ The lab could be pre-hosted, or you can deploy your own flavor for your own test
 
 == Special Thanks
 
-Special thanks to Germán Montalvo, Cesar Martinez and Nacho Sanchez among others, for their support and help during the testing of this lab.
+Special thanks to Germán Montalvo, Cesar Gutierrez, Nacho Sanchez and Asier Cidón among others, for their support and help during the testing of this lab.

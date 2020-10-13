@@ -27,6 +27,7 @@ This lab is geared towards systems administrators, cloud administrators and oper
 The Prerequisites for this lab include to have installed and available an RDP Client such as:
 
 * https://remmina.org/how-to-install-remmina/[Remmina for Linux]
+* http://www.freerdp.com/[FreeRDP for Fedora]
 * https://support.microsoft.com/en-us/help/4028379/windows-10-how-to-use-remote-desktop[Remote Desktop for Windows]
 * https://apps.apple.com/app/microsoft-remote-desktop/id1295203466?mt=12[Microsoft Remote Desktop for Mac]
 

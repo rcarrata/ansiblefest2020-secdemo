@@ -236,7 +236,7 @@ Go to the SmartConsole R80.30 (Pink Crown icon) and click on it.
 ```
 Username: admin
 Password: <password_for_checkpoint>>
-Server_Name: "Check IP Inventory Host in Tower"
+Server_Name: "Check CHK_SMS_IP Inventory Host in Tower"
 ```
 
 ++++
@@ -258,7 +258,7 @@ NOTE: Remember that the IP is only orientative. Check your lab ip in the vars or
 
 * Click Proceed
 
-* Close "What's New Pop Up Icon"
+* Close "What’s New Pop Up Icon" or press Escape button
 
 ++++
 <p align="center">

@@ -101,12 +101,29 @@ Once the Windows10 is deployed properly, you need to connect to the VM of Win10 
 </p>
 ++++
 
-
 The parameter connections are the following:
 
 * Server: Public windows IP
 * Username: azureuser
 * Password: << ask your administrator >>
+
+
+For connecting with Fedora you can use both Remmina or FreeRDP. 
+
+For using FreeRDP:
+
+```
+$ sudo dnf install freerdp
+$ /usr/bin/xfreerdp /v:<<IP>> /u:azureuser
+```
+
+For Remmina you need to specify the Server, Username and Password:
+
+++++
+<p align="center">
+  <img width="500" src="../documentation/images/lab2_11.png">
+</p>
+++++
 
 NOTE: **Why do you need Windows10 VM**? Two main reasons here: first of all, we need to connect to the all VMs and resources inside the secured network in the cloud, so the Windows10 is a Jumphost , because the RHEL servers are not public, simulating a real scenario (the apps are behind the firewall and never exposed). On the other hand also we need the Checkpoint SmartConsole installed for connecting to the Checkpoint Security Management Server in order to manage the objects or check the automations. 
 
