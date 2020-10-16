@@ -55,7 +55,7 @@ The lab could be pre-hosted, or you can deploy your own flavor for your own test
 
 == Slides
 
-This lab was presented by Roberto Carratalá and Diego Escobar in the AnsibleFest2020. The link::https://www.slideshare.net/RobertoCarratalaSanc/ansiblefest-2020-automate-cybersecurity-solutions-in-a-cloud-native-scenario[slides are available] with more details about the event, and with links to the Video Demos.
+This lab was presented by Roberto Carratalá and Diego Escobar in the AnsibleFest2020. The link:https://www.slideshare.net/RobertoCarratalaSanc/ansiblefest-2020-automate-cybersecurity-solutions-in-a-cloud-native-scenario[slides are available] with more details about the event, and with links to the Video Demos.
 
 == Special Thanks
 
