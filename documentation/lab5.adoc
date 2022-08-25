@@ -216,5 +216,3 @@ Pull requests and Issues are very welcome!
 Have a very nice day!
 
 Rober & Diego
-
-link:lab4.adoc[Previous Section -> Lab4 - Automatic systems securization through Policies and Checkpoint Management Objects]
